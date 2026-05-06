@@ -265,7 +265,7 @@ shinyApp(ui = ui, server = server)
 
 # 3. One-Sample *t*-Test
 
-A **one-sample *t*-test** asks: *Is our sample mean significantly different from a hypothesized population mean (μ₀)?*
+A **one-sample *t*-test** asks: *Is our sample mean significantly different from a hypothesized population mean (μ₀)?* We often test against the hypothesis that our population mean is 0, and we test our sample after subtracting the sample mean from all observations. 
 
 We use a *t*-statistic (not *z*) because **σ is unknown** and must be estimated from the sample:
 
@@ -657,7 +657,7 @@ shinyApp(ui = ui, server = server)
 
 # 5. One-Way ANOVA
 
-ANOVA (Analysis of Variance) tests whether **2 or more group means** are equal. In practice, it's usually used for **3 or more group means**, but it's important to understand that you can use it for comparing two groups.
+ANOVA (Analysis of Variance) tests whether **the variance of 2 or more group means** are equal. In practice, it's usually used for **3 or more groups**, but it's important to understand that you can use it for comparing two groups.
 
 ::: {.callout-tip title="Performing an ANOVA on only 2 groups"}
 One-way ANOVA on two groups actually gives you the **same p-value as a pooled two-sample t-test!**
@@ -675,7 +675,7 @@ There is no difference between any of the group means:
 $$H_0: \mu_1 = \mu_2 = \mu_3 = \dots = \mu_k$$
 :::
 
-If you get a significant *p*-value on these tests, you often will follow up with a *t*-test to identify which of the groups has the difference. 
+If you get a significant *p*-value on these tests, you often will follow up with a post-hoc test to identify which of the groups has the difference. 
 
 It partitions total variance into:
 
@@ -971,3 +971,4 @@ shinyApp(ui = ui, server = server)
 
 ---
 
+NOTE: Please email me (benjamin.e.graul.gr@dartmouth.edu) if you find any errors in this tool! 
