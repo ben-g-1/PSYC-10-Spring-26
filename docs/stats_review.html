@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.537">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ben Graul">
+
+<title>Midterm 1 Interactive Review</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="stats_review_files/libs/clipboard/clipboard.min.js"></script>
+<script src="stats_review_files/libs/quarto-html/quarto.js"></script>
+<script src="stats_review_files/libs/quarto-html/popper.min.js"></script>
+<script src="stats_review_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="stats_review_files/libs/quarto-html/anchor.min.js"></script>
+<link href="stats_review_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="stats_review_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="stats_review_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="stats_review_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="stats_review_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<meta name="shinylive:serviceworker_dir" content=".">
+<script src="stats_review_files/libs/quarto-contrib/shinylive-0.10.8/shinylive/load-shinylive-sw.js" type="module"></script>
+<script src="stats_review_files/libs/quarto-contrib/shinylive-0.10.8/shinylive/run-python-blocks.js" type="module"></script>
+<link href="stats_review_files/libs/quarto-contrib/shinylive-0.10.8/shinylive/shinylive.css" rel="stylesheet">
+<link href="stats_review_files/libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Midterm 1 Interactive Review</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ben Graul </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This notebook provides interactive visualizations for five core statistical concepts covered in Stats 26.</p>
+<p>Playing with data is the best ways to develop an intuition for <strong>what’s going on inside</strong> each of the tests that we learn about in class. I struggled to understand WHY any of the formulas worked when I was just applying them, but seeing the way changing one of the variables shifted the entire dataset really helped me.</p>
+<hr>
+<section id="central-limit-theorem-clt" class="level1">
+<h1>1. Central Limit Theorem (CLT)</h1>
+<p>The <strong>Central Limit Theorem</strong> states that the sampling distribution of the sample mean approaches a Normal distribution as the number of samples grows — regardless of the shape of the underlying population distribution.</p>
+<p>Key takeaways:</p>
+<ul>
+<li>The <strong>mean</strong> of the sampling distribution equals the population mean (μ)</li>
+<li>The <strong>spread</strong> (standard error) shrinks as sample size <em>n</em> increases: SE = σ / √n</li>
+<li>Even highly skewed or bimodal populations produce approximately Normal sampling distributions with enough samples</li>
+</ul>
+<p>The tendency for our samples to create this type of normal distribution is what enables most of our other statistical tests.</p>
+<p><strong>How to use this app:</strong> Choose a population shape, set the sample size (<em>n</em>), then drag the “Number of samples” slider slowly from left to right to watch the sampling distribution build up.</p>
+<p>Notable milestones: <strong>1 sample</strong> (almost nothing), <strong>10 samples</strong> (rough shape), <strong>100 samples</strong> (clearly bell-shaped), <strong>300 samples</strong> (well-converged).</p>
+<p>However, note how the sample size changes how quickly the correct mean is estimated.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| viewerHeight: 550
+#| standalone: true
+
+library(shiny)
+
+ui &lt;- fluidPage(
+  titlePanel("Central Limit Theorem"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("dist", "Population shape",
+        choices = c("Normal" = "normal",
+                    "Right-skewed" = "skewed",
+                    "Uniform" = "uniform",
+                    "Bimodal" = "bimodal")),
+      sliderInput("n", "Sample size (n)", min = 1, max = 50, value = 5),
+      sliderInput("n_sims", "Number of samples drawn", min = 1, max = 300, value = 1),
+      hr(),
+      helpText("Drag 'Number of samples' slowly to watch the sampling distribution build up.")
+    ),
+    mainPanel(
+      plotOutput("cltPlot", height = "380px"),
+      uiOutput("callout")
+    )
+  )
+)
+
+server &lt;- function(input, output) {
+
+  population &lt;- reactive({
+    set.seed(110)
+    switch(input$dist,
+      normal  = rnorm(50, mean = 21, sd = 1.5),
+      skewed  = c(rnorm(40, mean = 19, sd = 1), rnorm(10, mean = 27, sd = 2)),
+      uniform = runif(200, min = 18, max = 26),
+      bimodal = c(rnorm(100, mean = 18, sd = 1), rnorm(100, mean = 24, sd = 1))
+    )
+  })
+
+  sample_means &lt;- reactive({
+    set.seed(110)
+    pop &lt;- population()
+    replicate(input$n_sims, mean(sample(pop, input$n, replace = TRUE)))
+  })
+
+  output$cltPlot &lt;- renderPlot({
+    pop   &lt;- population()
+    means &lt;- sample_means()
+    n_sims &lt;- input$n_sims
+    true_mean &lt;- mean(pop)
+
+    par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+    # Panel 1: Population
+    hist(pop,
+         breaks = 20,
+         col    = "skyblue",
+         border = "white",
+         main   = "Population Distribution",
+         xlab   = "Value",
+         xlim   = range(pop) + c(-1, 1))
+    abline(v = true_mean, col = "red", lwd = 3)
+    legend("topleft", legend = paste("μ =", round(true_mean, 2)),
+           col = "red", lwd = 2, bty = "n", cex = 0.85)
+
+    # Panel 2: Sampling distribution
+    xlim_range &lt;- range(c(means, pop)) + c(-1, 1)
+    hist(means,
+         breaks = max(5, min(30, n_sims %/% 5)),
+         col    = "tomato",
+         border = "white",
+         main   = sprintf("Sampling Distribution\n(%d sample%s, n = %d)",
+                          n_sims, if (n_sims == 1) "" else "s", input$n),
+         xlab   = "Sample mean",
+         xlim   = xlim_range)
+    abline(v = true_mean,   col = "red",  lwd = 3)
+    abline(v = mean(means), col = "blue", lwd = 3, lty = 2)
+    legend("topleft",
+           legend = c(paste("True μ =", round(true_mean, 2)),
+                      paste("x̄ of means =", round(mean(means), 2))),
+           col = c("red", "blue"), lwd = 2, lty = c(1, 2), bty = "n", cex = 0.85)
+  })
+
+  output$callout &lt;- renderUI({
+    means     &lt;- sample_means()
+    true_mean &lt;- mean(population())
+    n_sims    &lt;- input$n_sims
+    se_theory &lt;- sd(population()) / sqrt(input$n)
+    se_obs    &lt;- sd(means)
+    milestone &lt;- if (n_sims == 1) {
+      "Just 1 sample — almost no distribution to see yet."
+    } else if (n_sims &lt;= 10) {
+      paste0("After ", n_sims, " samples: shape is very rough.")
+    } else if (n_sims &lt;= 100) {
+      paste0("After ", n_sims, " samples: bell shape is emerging.")
+    } else {
+      paste0("After ", n_sims, " samples: well-converged to Normal.")
+    }
+    tags$div(
+      style = "background:#f0f4f8; border-left:4px solid #2c7bb6; padding:10px 14px; margin-top:10px; border-radius:4px;",
+      tags$b("Snapshot: "), milestone, tags$br(),
+      sprintf("Running mean of sample means: %.3f (true μ = %.3f)", mean(means), true_mean), tags$br(),
+      sprintf("Observed SE: %.3f | Theoretical SE (σ/√n): %.3f", se_obs, se_theory)
+    )
+  })
+}
+
+shinyApp(ui = ui, server = server)
+</code></pre>
+<hr>
+</section>
+<section id="z-test" class="level1">
+<h1>2. Z-Test</h1>
+<p>A <strong>z-test</strong> is used when we know the <strong>population standard deviation (σ)</strong> — a rare but instructive scenario (e.g., when a large historical dataset gives us σ exactly).</p>
+<p><span class="math display">\[z = \frac{\bar{x} - \mu_0}{\sigma / \sqrt{n}}\]</span></p>
+<p>Because σ is known, we compare to the <strong>Standard Normal</strong> (not a <em>t</em>-distribution). The critical value is always ±1.96 for α = 0.05, two-tailed, regardless of <em>n</em>.</p>
+<p><strong>How to use this app:</strong> Notice how the z-test and t-test give nearly identical results when <em>n</em> is large — the <em>t</em>-distribution approaches Normal.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| viewerHeight: 480
+#| standalone: true 
+
+library(shiny)
+
+ui &lt;- fluidPage(
+  titlePanel("Z-Test (Known σ)"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("mu0",         "Hypothesized mean (μ₀)",  15, 25, 20, step = 0.5),
+      sliderInput("sample_mean", "Observed sample mean (x̄)", 15, 25, 21, step = 0.5),
+      sliderInput("sigma",       "Known population SD (σ)",  0.5, 8, 2,  step = 0.1),
+      sliderInput("n",           "Sample size (n)",           5, 200, 30)
+    ),
+    mainPanel(
+      plotOutput("zPlot", height = "300px"),
+      uiOutput("zResults")
+    )
+  )
+)
+
+server &lt;- function(input, output) {
+
+  z_stat &lt;- reactive({
+    (input$sample_mean - input$mu0) / (input$sigma / sqrt(input$n))
+  })
+
+  p_val &lt;- reactive({
+    2 * pnorm(-abs(z_stat()))
+  })
+
+  output$zPlot &lt;- renderPlot({
+    z    &lt;- z_stat()
+    z_c  &lt;- 1.96
+    x    &lt;- seq(-5, 5, length.out = 500)
+    y    &lt;- dnorm(x)
+
+    par(mar = c(4, 4, 3, 1))
+    plot(x, y, type = "l", lwd = 2,
+         main = "Standard Normal Distribution",
+         xlab = "z", ylab = "Density")
+    x_lo &lt;- x[x &lt;= -z_c]; x_hi &lt;- x[x &gt;= z_c]
+    polygon(c(min(x_lo), x_lo, -z_c), c(0, dnorm(x_lo), 0),
+            col = rgb(0.5, 0.5, 0.5, 0.3), border = NA)
+    polygon(c(min(x_hi), x_hi, z_c), c(0, dnorm(x_hi), 0),
+            col = rgb(0.5, 0.5, 0.5, 0.3), border = NA)
+    abline(v =  z,   col = "navy",   lwd = 2.5, lty = 2)
+    abline(v =  z_c, col = "tomato", lwd = 1.5, lty = 3)
+    abline(v = -z_c, col = "tomato", lwd = 1.5, lty = 3)
+    legend("topleft",
+           legend = c(sprintf("z = %.3f", z),
+                      "±z_crit = ±1.96",
+                      "Rejection region (α=0.05)"),
+           col = c("navy", "tomato", rgb(0.5, 0.5, 0.5, 0.5)),
+           lwd = c(2.5, 1.5, 8), lty = c(2, 3, 1), bty = "n", cex = 0.85)
+  })
+
+  output$zResults &lt;- renderUI({
+    z      &lt;- z_stat()
+    p      &lt;- p_val()
+    reject &lt;- p &lt; 0.05
+    color  &lt;- if (reject) "#c0392b" else "#27ae60"
+    decision &lt;- if (reject)
+      sprintf("Reject H₀: μ₀ = %.1f (p &lt; 0.05)", input$mu0)
+    else
+      sprintf("Fail to reject H₀: μ₀ = %.1f (p ≥ 0.05)", input$mu0)
+    tags$div(
+      style = paste0("background:#f9f9f9; border-left:4px solid ", color,
+                     "; padding:10px 14px; margin-top:10px; border-radius:4px;"),
+      tags$b("Results:"), tags$br(),
+      sprintf("z = %.3f", z), tags$br(),
+      sprintf("p-value = %.4f", p), tags$br(),
+      tags$b(decision)
+    )
+  })
+}
+
+shinyApp(ui = ui, server = server)
+</code></pre>
+<hr>
+</section>
+<section id="one-sample-t-test" class="level1">
+<h1>3. One-Sample <em>t</em>-Test</h1>
+<p>A <strong>one-sample <em>t</em>-test</strong> asks: <em>Is our sample mean significantly different from a hypothesized population mean (μ₀)?</em></p>
+<p>We use a <em>t</em>-statistic (not <em>z</em>) because <strong>σ is unknown</strong> and must be estimated from the sample:</p>
+<p><span class="math display">\[t = \frac{\bar{x} - \mu_0}{s / \sqrt{n}}, \quad df = n - 1\]</span></p>
+<p>The <em>p</em>-value is the probability of observing a <em>t</em>-statistic this extreme (or more) if H₀ were true.</p>
+<p><strong>How to use this app:</strong> Adjust the sliders to see how moving μ₀ further from the observed mean, increasing <em>n</em>, or decreasing <em>s</em> all affect the <em>t</em>-statistic and <em>p</em>-value.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| viewerHeight: 520
+#| standalone: true
+
+library(shiny)
+
+ui &lt;- fluidPage(
+  titlePanel("One-Sample t-Test"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("mu0",         "Hypothesized mean (μ₀)",  15, 25, 20, step = 0.5),
+      sliderInput("sample_mean", "Observed sample mean (x̄)", 15, 25, 21, step = 0.5),
+      sliderInput("sample_sd",   "Sample SD (s)",            0.5, 5, 2,  step = 0.1),
+      sliderInput("n",           "Sample size (n)",           5, 100, 30)
+    ),
+    mainPanel(
+      plotOutput("tPlot", height = "320px"),
+      uiOutput("results")
+    )
+  )
+)
+
+server &lt;- function(input, output) {
+
+  stats &lt;- reactive({
+    t_stat &lt;- (input$sample_mean - input$mu0) / (input$sample_sd / sqrt(input$n))
+    df     &lt;- input$n - 1
+    p_val  &lt;- 2 * pt(-abs(t_stat), df)
+    list(t = t_stat, df = df, p = p_val)
+  })
+
+  output$tPlot &lt;- renderPlot({
+    s    &lt;- stats()
+    df   &lt;- s$df
+    t_ob &lt;- s$t
+    t_crit &lt;- qt(0.975, df)
+    x    &lt;- seq(-5, 5, length.out = 500)
+    y    &lt;- dt(x, df)
+
+    par(mar = c(4, 4, 3, 1))
+    plot(x, y, type = "l", lwd = 2,
+         main = sprintf("t-Distribution (df = %d)", df),
+         xlab = "t", ylab = "Density")
+
+    # Shade rejection regions
+    x_lo &lt;- x[x &lt;= -t_crit]; x_hi &lt;- x[x &gt;= t_crit]
+    polygon(c(min(x_lo), x_lo, -t_crit), c(0, dt(x_lo, df), 0),
+            col = rgb(0.5, 0.5, 0.5, 0.3), border = NA)
+    polygon(c(min(x_hi), x_hi, t_crit), c(0, dt(x_hi, df), 0),
+            col = rgb(0.5, 0.5, 0.5, 0.3), border = NA)
+
+    abline(v = t_ob,    col = "navy",   lwd = 2.5, lty = 2)
+    abline(v =  t_crit, col = "tomato", lwd = 1.5, lty = 3)
+    abline(v = -t_crit, col = "tomato", lwd = 1.5, lty = 3)
+    legend("topleft",
+           legend = c(sprintf("t = %.3f", t_ob),
+                      sprintf("±t_crit = ±%.3f", t_crit),
+                      "Rejection region (α=0.05)"),
+           col = c("navy", "tomato", rgb(0.5, 0.5, 0.5, 0.5)),
+           lwd = c(2.5, 1.5, 8), lty = c(2, 3, 1), bty = "n", cex = 0.85)
+  })
+
+  output$results &lt;- renderUI({
+    s      &lt;- stats()
+    reject &lt;- s$p &lt; 0.05
+    color  &lt;- if (reject) "#c0392b" else "#27ae60"
+    decision &lt;- if (reject)
+      sprintf("Reject H₀: μ₀ = %.1f (p &lt; 0.05)", input$mu0)
+    else
+      sprintf("Fail to reject H₀: μ₀ = %.1f (p ≥ 0.05)", input$mu0)
+
+    tags$div(
+      style = paste0("background:#f9f9f9; border-left:4px solid ", color,
+                     "; padding:10px 14px; margin-top:10px; border-radius:4px;"),
+      tags$b("Results:"), tags$br(),
+      sprintf("t(%d) = %.3f", s$df, s$t), tags$br(),
+      sprintf("p-value = %.4f", s$p), tags$br(),
+      tags$b(decision)
+    )
+  })
+}
+
+shinyApp(ui = ui, server = server)
+</code></pre>
+<hr>
+</section>
+<section id="two-sample-t-test" class="level1">
+<h1>4. Two-Sample <em>t</em>-Test</h1>
+<p>A <strong>two-sample <em>t</em>-test</strong> tests whether the means of two independent groups differ:</p>
+<p><span class="math display">\[H_0: \mu_1 = \mu_2\]</span></p>
+<p>Two variants:</p>
+<ul>
+<li><strong>Pooled (equal variances assumed):</strong> combines variance estimates; uses <em>n₁ + n₂ − 2</em> df</li>
+<li><strong>Welch (unequal variances):</strong> uses separate variance estimates with adjusted (Satterthwaite) df — generally safer</li>
+</ul>
+<p><strong>How to use this app:</strong> Slide Group 1 and Group 2 means apart to see when the test becomes significant. Toggle between pooled and Welch to compare.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| viewerHeight: 580
+#| standalone: true
+
+library(shiny)
+
+ui &lt;- fluidPage(
+  titlePanel("Two-Sample t-Test"),
+  sidebarLayout(
+    sidebarPanel(
+      tags$b("Group 1 (blue)"),
+      sliderInput("mu1", "Mean₁",  10, 30, 20, step = 0.5),
+      sliderInput("sd1", "SD₁",    0.5, 8,  2,  step = 0.5),
+      sliderInput("n1",  "n₁",     5,  80,  30),
+      tags$hr(),
+      tags$b("Group 2 (red)"),
+      sliderInput("mu2", "Mean₂",  10, 30, 22, step = 0.5),
+      sliderInput("sd2", "SD₂",    0.5, 8,  2,  step = 0.5),
+      sliderInput("n2",  "n₂",     5,  80,  30),
+      tags$hr(),
+      checkboxInput("equal_var", "Assume equal variances (pooled)", value = FALSE)
+    ),
+    mainPanel(
+      plotOutput("twoSamplePlot", height = "380px"),
+      uiOutput("twoResults")
+    )
+  )
+)
+
+server &lt;- function(input, output) {
+
+  samples &lt;- reactive({
+    set.seed(110)
+    g1 &lt;- rnorm(input$n1, input$mu1, input$sd1)
+    g2 &lt;- rnorm(input$n2, input$mu2, input$sd2)
+    list(g1 = g1, g2 = g2)
+  })
+
+  test_result &lt;- reactive({
+    samp &lt;- samples()
+    t.test(samp$g1, samp$g2, var.equal = input$equal_var)
+  })
+
+  output$twoSamplePlot &lt;- renderPlot({
+    samp &lt;- samples()
+    res  &lt;- test_result()
+    t_ob &lt;- res$statistic
+    df   &lt;- res$parameter
+    t_crit &lt;- qt(0.975, df)
+
+    par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+    # Panel 1: overlapping histograms
+    all_vals &lt;- c(samp$g1, samp$g2)
+    xlim_h   &lt;- range(all_vals) + c(-1, 1)
+    hist(samp$g1, breaks = 15, col = rgb(0.18, 0.53, 0.78, 0.6),
+         border = "white", xlim = xlim_h,
+         main = "Sample Distributions", xlab = "Value")
+    hist(samp$g2, breaks = 15, col = rgb(0.82, 0.24, 0.24, 0.6),
+         border = "white", add = TRUE)
+    abline(v = mean(samp$g1), col = "blue", lwd = 2, lty = 2)
+    abline(v = mean(samp$g2), col = "red",  lwd = 2, lty = 2)
+    legend("topleft",
+           legend = c(sprintf("G1: x̄=%.1f", mean(samp$g1)),
+                      sprintf("G2: x̄=%.1f", mean(samp$g2))),
+           fill = c(rgb(0.18, 0.53, 0.78, 0.6), rgb(0.82, 0.24, 0.24, 0.6)),
+           bty = "n", cex = 0.85)
+
+    # Panel 2: t-distribution
+    x &lt;- seq(max(-8, -abs(t_ob) - 3), max(8, abs(t_ob) + 3), length.out = 500)
+    y &lt;- dt(x, df)
+    plot(x, y, type = "l", lwd = 2,
+         main = sprintf("t-Distribution (df = %.1f)", df),
+         xlab = "t", ylab = "Density")
+    x_lo &lt;- x[x &lt;= -t_crit]; x_hi &lt;- x[x &gt;= t_crit]
+    if (length(x_lo) &gt; 1)
+      polygon(c(min(x_lo), x_lo, -t_crit), c(0, dt(x_lo, df), 0),
+              col = rgb(0.5, 0.5, 0.5, 0.3), border = NA)
+    if (length(x_hi) &gt; 1)
+      polygon(c(min(x_hi), x_hi, t_crit), c(0, dt(x_hi, df), 0),
+              col = rgb(0.5, 0.5, 0.5, 0.3), border = NA)
+    abline(v =  t_ob,   col = "navy",   lwd = 2.5, lty = 2)
+    abline(v =  t_crit, col = "tomato", lwd = 1.5, lty = 3)
+    abline(v = -t_crit, col = "tomato", lwd = 1.5, lty = 3)
+  })
+
+  output$twoResults &lt;- renderUI({
+    res    &lt;- test_result()
+    t_ob   &lt;- res$statistic
+    df     &lt;- res$parameter
+    p_val  &lt;- res$p.value
+    reject &lt;- p_val &lt; 0.05
+    color  &lt;- if (reject) "#c0392b" else "#27ae60"
+    method &lt;- if (input$equal_var) "Pooled (equal variances)" else "Welch (unequal variances)"
+    decision &lt;- if (reject) "Reject H₀: μ₁ = μ₂" else "Fail to reject H₀: μ₁ = μ₂"
+    tags$div(
+      style = paste0("background:#f9f9f9; border-left:4px solid ", color,
+                     "; padding:10px 14px; margin-top:10px; border-radius:4px;"),
+      tags$b("Results (", method, "):"), tags$br(),
+      sprintf("t(%.1f) = %.3f", df, t_ob), tags$br(),
+      sprintf("p-value = %.4f", p_val), tags$br(),
+      tags$b(decision)
+    )
+  })
+}
+
+shinyApp(ui = ui, server = server)
+</code></pre>
+<hr>
+</section>
+<section id="one-way-anova" class="level1">
+<h1>5. One-Way ANOVA</h1>
+<p>ANOVA (Analysis of Variance) tests whether <strong>2 or more group means</strong> are equal. In practice, it’s usually used for <strong>3 or more group means</strong>, but it’s important to understand that you can use it for comparing two groups. It partitions total variance into:</p>
+<ul>
+<li><strong>Between-groups (SS_B):</strong> variance due to group differences</li>
+<li><strong>Within-groups / Error (SS_W):</strong> variance within groups</li>
+</ul>
+<p>The <strong>F-statistic</strong> = MS_Between / MS_Within. Large F → means differ more than chance.</p>
+<p><span class="math display">\[F = \frac{MS_{Between}}{MS_{Within}} = \frac{SS_B / (k-1)}{SS_W / (N-k)}\]</span></p>
+<section id="a.-between-groups-anova" class="level2">
+<h2 class="anchored" data-anchor-id="a.-between-groups-anova">5a. Between-Groups ANOVA</h2>
+<p>Independent groups — different subjects in each condition.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| viewerHeight: 620
+#| standalone: true
+
+library(shiny)
+
+ui &lt;- fluidPage(
+  titlePanel("Between-Groups One-Way ANOVA"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("k", "Number of groups", 2, 5, 3),
+      tags$b("Group means (μ):"),
+      sliderInput("mu1g", "Group 1 mean", 10, 30, 20, step = 0.5),
+      sliderInput("mu2g", "Group 2 mean", 10, 30, 22, step = 0.5),
+      sliderInput("mu3g", "Group 3 mean", 10, 30, 24, step = 0.5),
+      conditionalPanel("input.k &gt;= 4",
+        sliderInput("mu4g", "Group 4 mean", 10, 30, 26, step = 0.5)),
+      conditionalPanel("input.k &gt;= 5",
+        sliderInput("mu5g", "Group 5 mean", 10, 30, 28, step = 0.5)),
+      tags$hr(),
+      sliderInput("sd_g",  "Within-group SD (all groups)", 0.5, 8, 3, step = 0.5),
+      sliderInput("n_g",   "n per group",                   5,  40, 20)
+    ),
+    mainPanel(
+      plotOutput("anovaPlot", height = "350px"),
+      tableOutput("anovaTable"),
+      uiOutput("anovaResult")
+    )
+  )
+)
+
+server &lt;- function(input, output) {
+
+  anova_data &lt;- reactive({
+    set.seed(110)
+    k   &lt;- input$k
+    mus &lt;- c(input$mu1g, input$mu2g, input$mu3g,
+             if (k &gt;= 4) input$mu4g else NULL,
+             if (k &gt;= 5) input$mu5g else NULL)[seq_len(k)]
+    grp_list &lt;- lapply(seq_len(k), function(i)
+      data.frame(value = rnorm(input$n_g, mus[i], input$sd_g),
+                 group = factor(paste0("G", i))))
+    do.call(rbind, grp_list)
+  })
+
+  aov_result &lt;- reactive({
+    d &lt;- anova_data()
+    summary(aov(value ~ group, data = d))
+  })
+
+  output$anovaPlot &lt;- renderPlot({
+    d   &lt;- anova_data()
+    res &lt;- aov_result()
+    F_ob   &lt;- res[[1]]$`F value`[1]
+    df_bet &lt;- res[[1]]$Df[1]
+    df_wit &lt;- res[[1]]$Df[2]
+    F_crit &lt;- qf(0.95, df_bet, df_wit)
+    pal    &lt;- c("skyblue", "tomato", "seagreen", "gold", "orchid")
+
+    par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+    # Panel 1: boxplot of groups
+    boxplot(value ~ group, data = d,
+            col    = pal[seq_len(input$k)],
+            border = "gray30",
+            main   = "Group Distributions",
+            xlab   = "Group", ylab   = "Value")
+    stripchart(value ~ group, data = d,
+               method = "jitter", add = TRUE, pch = 16,
+               col = rgb(0, 0, 0, 0.3), vertical = TRUE)
+
+    # Panel 2: F-distribution
+    x_max &lt;- max(F_crit * 2.5, F_ob * 1.3, 6)
+    x &lt;- seq(0, x_max, length.out = 500)
+    y &lt;- df(x, df_bet, df_wit)
+    plot(x, y, type = "l", lwd = 2,
+         main = sprintf("F(%d, %d) Distribution", df_bet, df_wit),
+         xlab = "F", ylab = "Density")
+    x_rej &lt;- x[x &gt;= F_crit]
+    if (length(x_rej) &gt; 1)
+      polygon(c(F_crit, x_rej, max(x_rej)), c(0, df(x_rej, df_bet, df_wit), 0),
+              col = rgb(0.5, 0.5, 0.5, 0.3), border = NA)
+    abline(v = F_ob,   col = "navy",   lwd = 2.5, lty = 2)
+    abline(v = F_crit, col = "tomato", lwd = 1.5, lty = 3)
+    legend("topleft",
+           legend = c(sprintf("F = %.3f", F_ob),
+                      sprintf("F_crit = %.3f", F_crit)),
+           col = c("navy", "tomato"), lwd = 2, lty = c(2, 3), bty = "n", cex = 0.85)
+  })
+
+  output$anovaTable &lt;- renderTable({
+    res &lt;- aov_result()
+    tbl &lt;- res[[1]]
+    data.frame(
+      Source    = c("Between Groups", "Within Groups (Error)"),
+      SS        = round(tbl$`Sum Sq`, 3),
+      df        = tbl$Df,
+      MS        = round(tbl$`Mean Sq`, 3),
+      F         = c(round(tbl$`F value`[1], 3), NA),
+      p         = c(round(tbl$`Pr(&gt;F)`[1], 4), NA),
+      check.names = FALSE
+    )
+  }, na = "", striped = TRUE, bordered = TRUE, hover = TRUE)
+
+  output$anovaResult &lt;- renderUI({
+    res    &lt;- aov_result()
+    p_val  &lt;- res[[1]]$`Pr(&gt;F)`[1]
+    reject &lt;- p_val &lt; 0.05
+    color  &lt;- if (reject) "#c0392b" else "#27ae60"
+    decision &lt;- if (reject) "Reject H₀: At least one group mean differs (p &lt; 0.05)"
+                else "Fail to reject H₀: No significant difference between group means (p ≥ 0.05)"
+    tags$div(
+      style = paste0("background:#f9f9f9; border-left:4px solid ", color,
+                     "; padding:8px 14px; border-radius:4px;"),
+      tags$b(decision)
+    )
+  })
+}
+
+shinyApp(ui = ui, server = server)
+</code></pre>
+<hr>
+</section>
+<section id="b.-within-groups-repeated-measures-anova" class="level2">
+<h2 class="anchored" data-anchor-id="b.-within-groups-repeated-measures-anova">5b. Within-Groups (Repeated Measures) ANOVA</h2>
+<p>The same subjects are measured across all conditions. Subject-to-subject variability is <strong>removed</strong> from the error term, dramatically increasing statistical power.</p>
+<p><span class="math display">\[F_{RM} = \frac{MS_{Conditions}}{MS_{Conditions \times Subjects}}\]</span></p>
+<p>The line plot below shows individual “subjects” across conditions — parallel lines → low within-subject error → high <em>F</em>.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| viewerHeight: 620
+#| standalone: true
+
+library(shiny)
+
+ui &lt;- fluidPage(
+  titlePanel("Within-Groups (Repeated Measures) ANOVA"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("k_rm",   "Number of conditions",    2, 4,   3),
+      sliderInput("n_subj", "Number of subjects",      5, 40,  20),
+      sliderInput("mu_diff","Mean difference across conditions", 0, 8, 2, step = 0.5),
+      sliderInput("sd_subj","Between-subject SD",      0.5, 8, 3, step = 0.5),
+      sliderInput("sd_err", "Within-subject error SD", 0.5, 5, 1, step = 0.25),
+      helpText("High between-subject SD + low error SD → RM ANOVA gains the most power.")
+    ),
+    mainPanel(
+      plotOutput("rmPlot", height = "380px"),
+      tableOutput("rmTable"),
+      uiOutput("rmResult")
+    )
+  )
+)
+
+server &lt;- function(input, output) {
+
+  rm_data &lt;- reactive({
+    set.seed(110)
+    k       &lt;- input$k_rm
+    n       &lt;- input$n_subj
+    subj_fx &lt;- rnorm(n, 0, input$sd_subj)  # random subject intercepts
+    cond_fx &lt;- seq(0, input$mu_diff, length.out = k)
+
+    rows &lt;- expand.grid(subject = 1:n, condition = 1:k)
+    rows$value &lt;- subj_fx[rows$subject] + cond_fx[rows$condition] +
+                  rnorm(nrow(rows), 0, input$sd_err)
+    rows$subject   &lt;- factor(rows$subject)
+    rows$condition &lt;- factor(rows$condition,
+                             labels = paste0("C", seq_len(k)))
+    rows
+  })
+
+  rm_aov &lt;- reactive({
+    d &lt;- rm_data()
+    summary(aov(value ~ condition + Error(subject/condition), data = d))
+  })
+
+  output$rmPlot &lt;- renderPlot({
+    d   &lt;- rm_data()
+    res &lt;- rm_aov()
+
+    # Extract F from within-subject stratum
+    within_tbl &lt;- res[["Error: subject:condition"]][[1]]
+    F_ob   &lt;- within_tbl$`F value`[1]
+    df_cond &lt;- within_tbl$Df[1]
+    df_err  &lt;- within_tbl$Df[2]
+    F_crit  &lt;- qf(0.95, df_cond, df_err)
+
+    par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+    # Panel 1: individual trajectories
+    conds   &lt;- levels(d$condition)
+    n_conds &lt;- length(conds)
+    cond_means &lt;- tapply(d$value, d$condition, mean)
+    ylim_r  &lt;- range(d$value) + c(-0.5, 0.5)
+
+    plot(1:n_conds, cond_means, type = "n",
+         xlim = c(0.5, n_conds + 0.5), ylim = ylim_r,
+         xlab = "Condition", ylab = "Value",
+         main = "Individual Subject Trajectories",
+         xaxt = "n")
+    axis(1, at = 1:n_conds, labels = conds)
+
+    for (subj in levels(d$subject)) {
+      vals &lt;- d$value[d$subject == subj]
+      lines(1:n_conds, vals, col = rgb(0, 0, 0.8, 0.25), lwd = 1)
+    }
+    lines(1:n_conds, cond_means, col = "navy", lwd = 3)
+    points(1:n_conds, cond_means, col = "navy", pch = 19, cex = 1.4)
+
+    # Panel 2: F distribution
+    x_max &lt;- max(F_crit * 2.5, F_ob * 1.3, 6)
+    x &lt;- seq(0, x_max, length.out = 500)
+    y &lt;- df(x, df_cond, df_err)
+    plot(x, y, type = "l", lwd = 2,
+         main = sprintf("F(%d, %d) Distribution", df_cond, df_err),
+         xlab = "F", ylab = "Density")
+    x_rej &lt;- x[x &gt;= F_crit]
+    if (length(x_rej) &gt; 1)
+      polygon(c(F_crit, x_rej, max(x_rej)), c(0, df(x_rej, df_cond, df_err), 0),
+              col = rgb(0.5, 0.5, 0.5, 0.3), border = NA)
+    abline(v = F_ob,   col = "navy",   lwd = 2.5, lty = 2)
+    abline(v = F_crit, col = "tomato", lwd = 1.5, lty = 3)
+    legend("topleft",
+           legend = c(sprintf("F = %.3f", F_ob),
+                      sprintf("F_crit = %.3f", F_crit)),
+           col = c("navy", "tomato"), lwd = 2, lty = c(2, 3), bty = "n", cex = 0.85)
+  })
+
+  output$rmTable &lt;- renderTable({
+    res &lt;- rm_aov()
+    within_tbl &lt;- res[["Error: subject:condition"]][[1]]
+    data.frame(
+      Source = c("Conditions (Between)", "Error (Conditions × Subjects)"),
+      SS     = round(within_tbl$`Sum Sq`, 3),
+      df     = within_tbl$Df,
+      MS     = round(within_tbl$`Mean Sq`, 3),
+      F      = c(round(within_tbl$`F value`[1], 3), NA),
+      p      = c(round(within_tbl$`Pr(&gt;F)`[1], 4), NA),
+      check.names = FALSE
+    )
+  }, na = "", striped = TRUE, bordered = TRUE, hover = TRUE)
+
+  output$rmResult &lt;- renderUI({
+    res        &lt;- rm_aov()
+    within_tbl &lt;- res[["Error: subject:condition"]][[1]]
+    p_val      &lt;- within_tbl$`Pr(&gt;F)`[1]
+    reject     &lt;- p_val &lt; 0.05
+    color      &lt;- if (reject) "#c0392b" else "#27ae60"
+    decision   &lt;- if (reject)
+      "Reject H₀: Condition means differ significantly (p &lt; 0.05)"
+    else
+      "Fail to reject H₀: No significant effect of condition (p ≥ 0.05)"
+    tags$div(
+      style = paste0("background:#f9f9f9; border-left:4px solid ", color,
+                     "; padding:8px 14px; border-radius:4px;"),
+      tags$b(decision)
+    )
+  })
+}
+
+shinyApp(ui = ui, server = server)
+</code></pre>
+<hr>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
