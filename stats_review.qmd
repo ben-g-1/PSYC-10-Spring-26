@@ -1,6 +1,6 @@
 ---
 title: "Midterm 1 Interactive Review"
-subtitle: "PSYC 10 — Instructor: Samantha Wray, PhD"
+subtitle: "PSYC 10 -- Spring 2026"
 author:
   - name: "Ben Graul"
     affiliation: "Department of Psychological and Brain Sciences, Dartmouth College"
@@ -14,7 +14,7 @@ filters:
   - shinylive
 ---
 
-This notebook provides interactive visualizations for five core statistical concepts covered in Stats 26. 
+This notebook provides interactive visualizations for five core statistical concepts covered in PSYC 10 with Dr. Samantha Wray. 
 
 Playing with data is the best ways to develop an intuition for **what's going on inside** each of the tests that we learn about in class. I struggled to understand WHY any of the formulas worked when I was just applying them, but seeing the way changing one of the variables shifted the entire dataset really helped me. 
 
