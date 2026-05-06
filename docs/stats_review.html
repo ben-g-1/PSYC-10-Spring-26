@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ben Graul">
+<meta name="dcterms.date" content="2026-05-06">
 
 <title>Midterm 1 Interactive Review</title>
 <style>
@@ -81,19 +82,33 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Midterm 1 Interactive Review</h1>
+<p class="subtitle lead">PSYC 10 — Instructor: Samantha Wray, PhD</p>
 </div>
 
 
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Ben Graul </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Department of Psychological and Brain Sciences, Dartmouth College
+          </p>
+      </div>
+  </div>
 
 <div class="quarto-title-meta">
 
+      
     <div>
-    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-             <p>Ben Graul </p>
-          </div>
+      <p class="date">May 6, 2026</p>
+    </div>
   </div>
-    
   
     
   </div>
@@ -105,6 +120,25 @@ window.Quarto = {
 
 <p>This notebook provides interactive visualizations for five core statistical concepts covered in Stats 26.</p>
 <p>Playing with data is the best ways to develop an intuition for <strong>what’s going on inside</strong> each of the tests that we learn about in class. I struggled to understand WHY any of the formulas worked when I was just applying them, but seeing the way changing one of the variables shifted the entire dataset really helped me.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="If I were studying for a midterm...">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+If I were studying for a midterm…
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Here’s what I would do with this tool:</p>
+<ul>
+<li>Play around with the sliders to see what matters the most when determining significance or effect sizes.</li>
+<li>Find interesting combinations and try to think of what data you could gather that would have the same dynamics.</li>
+<li>Set all but one slider for each test, then try to guess the point that that slider will change your interpretation of results (i.e.&nbsp;when does it cross the significance threshold?).</li>
+<li>Practice saying what my degrees of freedom will be whenever I change the number of samples.</li>
+</ul>
+</div>
+</div>
 <hr>
 <section id="central-limit-theorem-clt" class="level1">
 <h1>1. Central Limit Theorem (CLT)</h1>
@@ -237,6 +271,21 @@ shinyApp(ui = ui, server = server)
 <p>A <strong>z-test</strong> is used when we know the <strong>population standard deviation (σ)</strong> — a rare but instructive scenario (e.g., when a large historical dataset gives us σ exactly).</p>
 <p><span class="math display">\[z = \frac{\bar{x} - \mu_0}{\sigma / \sqrt{n}}\]</span></p>
 <p>Because σ is known, we compare to the <strong>Standard Normal</strong> (not a <em>t</em>-distribution). The critical value is basically always ±1.96 for α = 0.05, two-tailed, regardless of <em>n</em>. This is directly in contrast to t-tests, where the critical values shrink as n incraeses.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="The Null Hypothesis">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The Null Hypothesis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The population mean equals our hypothesized value:</p>
+<p><span class="math display">\[H_0: \mu = \mu_0\]</span></p>
+<p>where <span class="math inline">\(\mu_0\)</span> is the specific value we’re testing against (e.g., a national average).</p>
+</div>
+</div>
 <p><strong>How to use this app:</strong> Notice how the z-test and t-test give nearly identical results when <em>n</em> is large — the <em>t</em>-distribution approaches Normal.</p>
 <pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
@@ -328,6 +377,21 @@ shinyApp(ui = ui, server = server)
 <p>We use a <em>t</em>-statistic (not <em>z</em>) because <strong>σ is unknown</strong> and must be estimated from the sample:</p>
 <p><span class="math display">\[t = \frac{\bar{x} - \mu_0}{s / \sqrt{n}}, \quad df = n - 1\]</span></p>
 <p>The <em>p</em>-value is the probability of observing a <em>t</em>-statistic this extreme (or more) if H₀ were true.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="The Null Hypothesis">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The Null Hypothesis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The population mean equals our hypothesized value:</p>
+<p><span class="math display">\[H_0: \mu = \mu_0\]</span></p>
+<p>The only difference from the z-test is that we estimate <span class="math inline">\(\sigma\)</span> from our sample (as <span class="math inline">\(s\)</span>) rather than knowing it.</p>
+</div>
+</div>
 <p><strong>How to use this app:</strong> Adjust the sliders to see how moving μ₀ further from the observed mean, increasing <em>n</em>, or decreasing <em>s</em> all affect the <em>t</em>-statistic and <em>p</em>-value.</p>
 <pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
@@ -429,6 +493,21 @@ shinyApp(ui = ui, server = server)
 </ul>
 <section id="a.-independent-samples" class="level2">
 <h2 class="anchored" data-anchor-id="a.-independent-samples">4a. Independent samples</h2>
+<div class="callout callout-style-default callout-important callout-titled" title="The Null Hypothesis">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The Null Hypothesis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The two population means are equal:</p>
+<p><span class="math display">\[H_0: \mu_1 = \mu_2\]</span></p>
+<p>In other words, the difference between the means is zero: <span class="math inline">\(\mu_1 - \mu_2 = 0\)</span>.</p>
+</div>
+</div>
 <p>Two variants:</p>
 <ul>
 <li><strong>Pooled (equal variances assumed):</strong> combines variance estimates; uses <em>n₁ + n₂ − 2</em> df</li>
@@ -458,7 +537,7 @@ ui &lt;- fluidPage(
       sliderInput("sd2", "SD₂",    0.5, 8,  2,  step = 0.5),
       sliderInput("n2",  "n₂",     5,  80,  30),
       tags$hr(),
-      checkboxInput("equal_var", "Assume equal variances (pooled)", value = FALSE)
+      checkboxInput("equal_var", "Assume equal variances (pooled)", value = TRUE)
     ),
     mainPanel(
       plotOutput("twoSamplePlot", height = "380px"),
@@ -550,11 +629,38 @@ shinyApp(ui = ui, server = server)
 <section id="b.-paired-samples-dependent-t-test" class="level2">
 <h2 class="anchored" data-anchor-id="b.-paired-samples-dependent-t-test">4b. Paired Samples (Dependent t-Test)</h2>
 <p>A <strong>paired t-test</strong> is used when the same subjects are measured under two conditions (e.g., before/after treatment, left hand vs right hand, condition A vs condition B for the same person).</p>
-<p>The key insight: by using the <strong>same subjects</strong> in both conditions, we can subtract out individual differences. This is analogous to the relationship between the <strong>between-groups ANOVA</strong> and <strong>within-groups (repeated measures) ANOVA</strong> in Section 5 — using the same subjects across conditions removes between-subject variability from the error term, dramatically increasing statistical power.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="The Null Hypothesis">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The Null Hypothesis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There is no change in the mean when comparing the two observations:</p>
+<p><span class="math display">\[H_0: \mu_d = 0\]</span></p>
+<p>where <span class="math inline">\(\mu_d\)</span> is the mean of the difference scores (Condition 2 − Condition 1).</p>
+</div>
+</div>
 <p>Instead of comparing two independent groups, we compute the <strong>difference score</strong> for each subject and test whether the mean difference is significantly different from zero:</p>
 <p><span class="math display">\[t = \frac{\bar{d} - \mu_0}{s_d / \sqrt{n}}, \quad df = n - 1\]</span></p>
 <p>where <span class="math inline">\(\bar{d}\)</span> is the mean of the difference scores, <span class="math inline">\(s_d\)</span> is the SD of the differences, and <span class="math inline">\(n\)</span> is the <strong>number of pairs</strong> (not total observations).</p>
-<p><strong>How to use this app:</strong> Adjust the between-subject SD and within-subject (error) SD to see how the paired test gains power. When between-subject variability is high but within-subject error is low, the paired test dramatically outperforms the independent test on the same data.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="The Key Insight">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The Key Insight
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By using the <strong>same subjects</strong> in both conditions, we can subtract out individual differences. This is analogous to the relationship between the <strong>between-groups ANOVA</strong> and <strong>within-groups (repeated measures) ANOVA</strong> in Section 5 — using the same subjects across conditions removes between-subject variability from the error term, dramatically increasing statistical power.</p>
+</div>
+</div>
+<p><strong>How to use this app:</strong> Adjust the between-subject SD and within-subject (error) SD to see how the paired test gains power. When between-subject variability is high but within-subject error is low, the paired test dramatically outperforms the independent test on the same data. Notice how small of a difference can be detected if you maximize the sample size and minimize within-subject error!</p>
 <pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -619,7 +725,7 @@ server &lt;- function(input, output) {
     plot(1:2, c(mean(d$c1), mean(d$c2)), type = "n",
          xlim = c(0.5, 2.5), ylim = ylim_r,
          xlab = "Condition", ylab = "Value",
-         main = "Individual Subject Trajectories",
+         main = "Subject-level Differences",
          xaxt = "n")
     axis(1, at = 1:2, labels = c("C1", "C2"))
 
@@ -632,7 +738,7 @@ server &lt;- function(input, output) {
 
     # Panel 2: histogram of difference scores
     hist(d$diff, breaks = 12, col = "tomato", border = "white",
-         main = "Distribution of Difference Scores",
+         main = "Distribution of Differences",
          xlab = "Difference (C2 - C1)")
     abline(v = 0, col = "gray40", lwd = 2, lty = 3)
     abline(v = mean(d$diff), col = "navy", lwd = 3, lty = 2)
@@ -673,9 +779,38 @@ shinyApp(ui = ui, server = server)</code></pre>
 </section>
 <section id="one-way-anova" class="level1">
 <h1>5. One-Way ANOVA</h1>
-<p>ANOVA (Analysis of Variance) tests whether <strong>2 or more group means</strong> are equal. In practice, it’s usually used for <strong>3 or more group means</strong>, but it’s important to understand that you can use it for comparing two groups. In this case, it actually gives you the <strong>same p-value as a pooled two-sample t-test!</strong> In other words, when performing an ANOVA for two groups: <span class="math display">\[F = t^2\]</span></p>
+<p>ANOVA (Analysis of Variance) tests whether <strong>2 or more group means</strong> are equal. In practice, it’s usually used for <strong>3 or more group means</strong>, but it’s important to understand that you can use it for comparing two groups.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Performing an ANOVA on only 2 groups">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Performing an ANOVA on only 2 groups
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>One-way ANOVA on two groups actually gives you the <strong>same p-value as a pooled two-sample t-test!</strong></p>
+<p>In other words, when performing an ANOVA for two groups:</p>
+<p><span class="math display">\[F = t^2\]</span></p>
 <p>Remember that this is <strong>NOT</strong> the case when there are 3 or more groups, which is the usual time you’ll see ANOVA being used.</p>
-<p>The null hypothesis is that there is no difference between any of the group means. If you get a significant <em>p</em>-value on these tests, you often will follow up with a <em>t</em>-test to identify which of the groups has the difference.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="The Null Hypothesis">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The Null Hypothesis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There is no difference between any of the group means:</p>
+<p><span class="math display">\[H_0: \mu_1 = \mu_2 = \mu_3 = \dots = \mu_k\]</span></p>
+</div>
+</div>
+<p>If you get a significant <em>p</em>-value on these tests, you often will follow up with a <em>t</em>-test to identify which of the groups has the difference.</p>
 <p>It partitions total variance into:</p>
 <ul>
 <li><strong>Between-groups (SS_B):</strong> variance due to group differences</li>
@@ -813,6 +948,21 @@ shinyApp(ui = ui, server = server)
 </section>
 <section id="b.-within-groups-repeated-measures-anova" class="level2">
 <h2 class="anchored" data-anchor-id="b.-within-groups-repeated-measures-anova">5b. Within-Groups (Repeated Measures) ANOVA</h2>
+<div class="callout callout-style-default callout-important callout-titled" title="The Null Hypothesis">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The Null Hypothesis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There is no change in the group mean across all observations:</p>
+<p><span class="math display">\[H_0: \mu_1 = \mu_2 = \dots = \mu_k\]</span></p>
+<p>where each <span class="math inline">\(\mu_i\)</span> represents the mean for the same subjects measured under condition <span class="math inline">\(i\)</span>.</p>
+</div>
+</div>
 <p>The same subjects are measured across all conditions. Subject-to-subject variability is <strong>removed</strong> from the error term, dramatically increasing statistical power.</p>
 <p><span class="math display">\[F_{RM} = \frac{MS_{Conditions}}{MS_{Conditions \times Subjects}}\]</span></p>
 <p>The line plot below shows individual “subjects” across conditions. Parallel lines are good and indicate low within-subject error. This results in a high <em>F</em>.</p>
