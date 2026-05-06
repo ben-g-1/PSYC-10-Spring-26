@@ -17,7 +17,7 @@ Playing with data is the best ways to develop an intuition for **what's going on
 
 # 1. Central Limit Theorem (CLT)
 
-The **Central Limit Theorem** states that the sampling distribution of the sample mean approaches a Normal distribution as the number of samples grows — regardless of the shape of the underlying population distribution.
+The **Central Limit Theorem** states that the sampling distribution of the sample mean approaches a Normal distribution as the sample size (n) grows — regardless of the shape of the underlying population distribution.
 
 Key takeaways:
 
@@ -27,9 +27,9 @@ Key takeaways:
 
 The tendency for our samples to create this type of normal distribution is what enables most of our other statistical tests. 
 
-**How to use this app:** Choose a population shape, set the sample size (*n*), then drag the "Number of samples" slider slowly from left to right to watch the sampling distribution build up. 
+**How to use this app:** Choose a population shape, set the sample size (*n*), then drag the "Number of samples" slider slowly from left to right to watch the sampling distribution build up. Try setting your sample size to 1, 10, and 100. Do you see much of a difference beyond that?
 
-Notable milestones: **1 sample** (almost nothing), **10 samples** (rough shape), **100 samples** (clearly bell-shaped), **300 samples** (well-converged).
+Notable milestones for a normally-distributed dataset: **1 sample** (almost nothing), **10 samples** (rough shape), **100 samples** (clearly bell-shaped), **300 samples** (well-converged).
 
 However, note how the sample size changes how quickly the correct mean is estimated. 
 
@@ -154,7 +154,7 @@ A **z-test** is used when we know the **population standard deviation (σ)** —
 
 $$z = \frac{\bar{x} - \mu_0}{\sigma / \sqrt{n}}$$
 
-Because σ is known, we compare to the **Standard Normal** (not a *t*-distribution). The critical value is always ±1.96 for α = 0.05, two-tailed, regardless of *n*.
+Because σ is known, we compare to the **Standard Normal** (not a *t*-distribution). The critical value is basically always ±1.96 for α = 0.05, two-tailed, regardless of *n*. This is directly in contrast to t-tests, where the critical values shrink as n incraeses. 
 
 **How to use this app:** Notice how the z-test and t-test give nearly identical results when *n* is large — the *t*-distribution approaches Normal.
 
@@ -351,7 +351,7 @@ $$H_0: \mu_1 = \mu_2$$
 Two variants:
 
 - **Pooled (equal variances assumed):** combines variance estimates; uses *n₁ + n₂ − 2* df
-- **Welch (unequal variances):** uses separate variance estimates with adjusted (Satterthwaite) df — generally safer
+- **Welch (unequal variances):** uses separate variance estimates with adjusted (Satterthwaite) df — generally safer, but not something you need to know for the midterm!. It might be instructive for you to see the difference between the two though, especially when setting the variances far apart from one another. The degrees of freedom for this version are adjusted. 
 
 **How to use this app:** Slide Group 1 and Group 2 means apart to see when the test becomes significant. Toggle between pooled and Welch to compare.
 
@@ -469,7 +469,9 @@ shinyApp(ui = ui, server = server)
 
 # 5. One-Way ANOVA
 
-ANOVA (Analysis of Variance) tests whether **2 or more group means** are equal. In practice, it's usually used for **3 or more group means**, but it's important to understand that you can use it for comparing two groups. 
+ANOVA (Analysis of Variance) tests whether **2 or more group means** are equal. In practice, it's usually used for **3 or more group means**, but it's important to understand that you can use it for comparing two groups. In this case, it actually gives you the **same p-value as a pooled two-sample t-test!!** 
+In other words, when performing an ANOVA for two groups:
+$$F = t^2$$
 
 It partitions total variance into:
 
@@ -617,7 +619,7 @@ $$F_{RM} = \frac{MS_{Conditions}}{MS_{Conditions \times Subjects}}$$
 
 The line plot below shows individual "subjects" across conditions. Parallel lines are good and indicate low within-subject error. This results in a high *F*.
 
-REMEMBER: While t-scores are universally accepted as having clearly delineated effect sizes, **F tests do not have a universal effect size**. Depending on your dataset, 
+REMEMBER: While t-scores are universally accepted as having clearly delineated conventional effect thresholds (d = 0.2 | 0.5 | 0.8), **F tests do not have common effect sizes**. Depending on your dataset, explaining 25% of the variance could be excellent! However, if you're looking at a cancer screening test, it is likely far too low.  
 
 ```{shinylive-r}
 #| viewerHeight: 620
