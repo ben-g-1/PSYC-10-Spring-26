@@ -108,7 +108,7 @@ window.Quarto = {
 <hr>
 <section id="central-limit-theorem-clt" class="level1">
 <h1>1. Central Limit Theorem (CLT)</h1>
-<p>The <strong>Central Limit Theorem</strong> states that the sampling distribution of the sample mean approaches a Normal distribution as the number of samples grows — regardless of the shape of the underlying population distribution.</p>
+<p>The <strong>Central Limit Theorem</strong> states that the sampling distribution of the sample mean approaches a Normal distribution as the sample size (n) grows — regardless of the shape of the underlying population distribution.</p>
 <p>Key takeaways:</p>
 <ul>
 <li>The <strong>mean</strong> of the sampling distribution equals the population mean (μ)</li>
@@ -116,8 +116,8 @@ window.Quarto = {
 <li>Even highly skewed or bimodal populations produce approximately Normal sampling distributions with enough samples</li>
 </ul>
 <p>The tendency for our samples to create this type of normal distribution is what enables most of our other statistical tests.</p>
-<p><strong>How to use this app:</strong> Choose a population shape, set the sample size (<em>n</em>), then drag the “Number of samples” slider slowly from left to right to watch the sampling distribution build up.</p>
-<p>Notable milestones: <strong>1 sample</strong> (almost nothing), <strong>10 samples</strong> (rough shape), <strong>100 samples</strong> (clearly bell-shaped), <strong>300 samples</strong> (well-converged).</p>
+<p><strong>How to use this app:</strong> Choose a population shape, set the sample size (<em>n</em>), then drag the “Number of samples” slider slowly from left to right to watch the sampling distribution build up. Try setting your sample size to 1, 10, and 100. Do you see much of a difference beyond that?</p>
+<p>Notable milestones for a normally-distributed dataset: <strong>1 sample</strong> (almost nothing), <strong>10 samples</strong> (rough shape), <strong>100 samples</strong> (clearly bell-shaped), <strong>300 samples</strong> (well-converged).</p>
 <p>However, note how the sample size changes how quickly the correct mean is estimated.</p>
 <pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
@@ -236,7 +236,7 @@ shinyApp(ui = ui, server = server)
 <h1>2. Z-Test</h1>
 <p>A <strong>z-test</strong> is used when we know the <strong>population standard deviation (σ)</strong> — a rare but instructive scenario (e.g., when a large historical dataset gives us σ exactly).</p>
 <p><span class="math display">\[z = \frac{\bar{x} - \mu_0}{\sigma / \sqrt{n}}\]</span></p>
-<p>Because σ is known, we compare to the <strong>Standard Normal</strong> (not a <em>t</em>-distribution). The critical value is always ±1.96 for α = 0.05, two-tailed, regardless of <em>n</em>.</p>
+<p>Because σ is known, we compare to the <strong>Standard Normal</strong> (not a <em>t</em>-distribution). The critical value is basically always ±1.96 for α = 0.05, two-tailed, regardless of <em>n</em>. This is directly in contrast to t-tests, where the critical values shrink as n incraeses.</p>
 <p><strong>How to use this app:</strong> Notice how the z-test and t-test give nearly identical results when <em>n</em> is large — the <em>t</em>-distribution approaches Normal.</p>
 <pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
@@ -424,7 +424,7 @@ shinyApp(ui = ui, server = server)
 <p>Two variants:</p>
 <ul>
 <li><strong>Pooled (equal variances assumed):</strong> combines variance estimates; uses <em>n₁ + n₂ − 2</em> df</li>
-<li><strong>Welch (unequal variances):</strong> uses separate variance estimates with adjusted (Satterthwaite) df — generally safer</li>
+<li><strong>Welch (unequal variances):</strong> uses separate variance estimates with adjusted (Satterthwaite) df — generally safer, but not something you need to know for the midterm!. It might be instructive for you to see the difference between the two though, especially when setting the variances far apart from one another. The degrees of freedom for this version are adjusted.</li>
 </ul>
 <p><strong>How to use this app:</strong> Slide Group 1 and Group 2 means apart to see when the test becomes significant. Toggle between pooled and Welch to compare.</p>
 <pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
@@ -541,7 +541,7 @@ shinyApp(ui = ui, server = server)
 </section>
 <section id="one-way-anova" class="level1">
 <h1>5. One-Way ANOVA</h1>
-<p>ANOVA (Analysis of Variance) tests whether <strong>2 or more group means</strong> are equal. In practice, it’s usually used for <strong>3 or more group means</strong>, but it’s important to understand that you can use it for comparing two groups.</p>
+<p>ANOVA (Analysis of Variance) tests whether <strong>2 or more group means</strong> are equal. In practice, it’s usually used for <strong>3 or more group means</strong>, but it’s important to understand that you can use it for comparing two groups. In this case, it actually gives you the <strong>same p-value as a pooled two-sample t-test!!</strong> In other words, when performing an ANOVA for two groups: <span class="math display">\[F = t^2\]</span></p>
 <p>It partitions total variance into:</p>
 <ul>
 <li><strong>Between-groups (SS_B):</strong> variance due to group differences</li>
@@ -682,7 +682,7 @@ shinyApp(ui = ui, server = server)
 <p>The same subjects are measured across all conditions. Subject-to-subject variability is <strong>removed</strong> from the error term, dramatically increasing statistical power.</p>
 <p><span class="math display">\[F_{RM} = \frac{MS_{Conditions}}{MS_{Conditions \times Subjects}}\]</span></p>
 <p>The line plot below shows individual “subjects” across conditions. Parallel lines are good and indicate low within-subject error. This results in a high <em>F</em>.</p>
-<p>REMEMBER: While t-scores are universally accepted as having clearly delineated effect sizes, <strong>F tests do not have a universal effect size</strong>. Depending on your dataset,</p>
+<p>REMEMBER: While t-scores are universally accepted as having clearly delineated conventional effect thresholds (d = 0.2 | 0.5 | 0.8), <strong>F tests do not have common effect sizes</strong>. Depending on your dataset, explaining 25% of the variance could be excellent! However, if you’re looking at a cancer screening test, it is likely far too low.</p>
 <pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
