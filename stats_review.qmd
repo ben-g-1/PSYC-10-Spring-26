@@ -344,14 +344,26 @@ shinyApp(ui = ui, server = server)
 
 # 4. Two-Sample *t*-Test
 
-A **two-sample *t*-test** tests whether the means of two independent groups differ:
+A **two-sample *t*-test** tests whether the means of two groups differ:
 
 $$H_0: \mu_1 = \mu_2$$
+
+We can use either **independent** or **dependent** tests based on what our two groups represent. 
+
+**When to use which:**
+
+- **Independent samples t-test:** Different subjects in each group (e.g., treatment vs. control with separate participants)
+- **Paired t-test:** Same subjects measured twice (e.g., pre-test vs. post-test, or same subject across two conditions)
+
+## 4a. Independent samples
 
 Two variants:
 
 - **Pooled (equal variances assumed):** combines variance estimates; uses *n₁ + n₂ − 2* df
 - **Welch (unequal variances):** uses separate variance estimates with adjusted (Satterthwaite) df — generally safer, but not something you need to know for the midterm!. It might be instructive for you to see the difference between the two though, especially when setting the variances far apart from one another. The degrees of freedom for this version are adjusted. 
+
+**CRITICAL: DON'T WORRY ABOUT THE WELCH TEST FOR ANYTHING OTHER THAN CURIOSITY**
+(for now at least)
 
 **How to use this app:** Slide Group 1 and Group 2 means apart to see when the test becomes significant. Toggle between pooled and Welch to compare.
 
@@ -465,13 +477,144 @@ shinyApp(ui = ui, server = server)
 
 ```
 
+## 4b. Paired Samples (Dependent t-Test)
+
+A **paired t-test** is used when the same subjects are measured under two conditions (e.g., before/after treatment, left hand vs right hand, condition A vs condition B for the same person). 
+
+The key insight: by using the **same subjects** in both conditions, we can subtract out individual differences. This is analogous to the relationship between the **between-groups ANOVA** and **within-groups (repeated measures) ANOVA** in Section 5 — using the same subjects across conditions removes between-subject variability from the error term, dramatically increasing statistical power.
+
+Instead of comparing two independent groups, we compute the **difference score** for each subject and test whether the mean difference is significantly different from zero:
+
+$$t = \frac{\bar{d} - \mu_0}{s_d / \sqrt{n}}, \quad df = n - 1$$
+
+where $\bar{d}$ is the mean of the difference scores, $s_d$ is the SD of the differences, and $n$ is the **number of pairs** (not total observations).
+
+**How to use this app:** Adjust the between-subject SD and within-subject (error) SD to see how the paired test gains power. When between-subject variability is high but within-subject error is low, the paired test dramatically outperforms the independent test on the same data.
+
+```{shinylive-r}
+#| viewerHeight: 620
+#| standalone: true
+
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel("Paired t-Test"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("n_pairs", "Number of subject pairs", 5, 50, 20),
+      sliderInput("mu_diff", "True mean difference (Condition 2 - Condition 1)",
+                  -5, 5, 1.5, step = 0.25),
+      sliderInput("sd_subj", "Between-subject SD",
+                  0.5, 8, 3, step = 0.5),
+      sliderInput("sd_err",  "Within-subject error SD",
+                  0.25, 5, 1, step = 0.25),
+      tags$hr(),
+      helpText("High between-subject SD + low error SD causes paired test to gain power vs. independent test.")
+    ),
+    mainPanel(
+      plotOutput("pairedPlot", height = "400px"),
+      uiOutput("pairedResults")
+    )
+  )
+)
+
+server <- function(input, output) {
+
+  paired_data <- reactive({
+    set.seed(110)
+    n <- input$n_pairs
+    subj_fx <- rnorm(n, 0, input$sd_subj)  # individual baseline
+    c1 <- subj_fx + rnorm(n, 0, input$sd_err)
+    c2 <- subj_fx + input$mu_diff + rnorm(n, 0, input$sd_err)
+    data.frame(subject = 1:n, c1 = c1, c2 = c2, diff = c2 - c1)
+  })
+
+  paired_test <- reactive({
+    d <- paired_data()
+    t.test(d$c2, d$c1, paired = TRUE)
+  })
+
+  indep_test <- reactive({
+    d <- paired_data()
+    t.test(d$c2, d$c1, paired = FALSE, var.equal = TRUE)
+  })
+
+  output$pairedPlot <- renderPlot({
+    d <- paired_data()
+    res <- paired_test()
+    t_ob <- res$statistic
+    df   <- res$parameter
+    t_crit <- qt(0.975, df)
+
+    par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+    # Panel 1: individual subject trajectories
+    ylim_r <- range(c(d$c1, d$c2)) + c(-1, 1)
+    plot(1:2, c(mean(d$c1), mean(d$c2)), type = "n",
+         xlim = c(0.5, 2.5), ylim = ylim_r,
+         xlab = "Condition", ylab = "Value",
+         main = "Individual Subject Trajectories",
+         xaxt = "n")
+    axis(1, at = 1:2, labels = c("C1", "C2"))
+
+    for (i in 1:nrow(d)) {
+      lines(1:2, c(d$c1[i], d$c2[i]), col = rgb(0, 0, 0.8, 0.3), lwd = 1)
+      points(1:2, c(d$c1[i], d$c2[i]), col = rgb(0, 0, 0.8, 0.4), pch = 16, cex = 0.8)
+    }
+    lines(1:2, c(mean(d$c1), mean(d$c2)), col = "navy", lwd = 3)
+    points(1:2, c(mean(d$c1), mean(d$c2)), col = "navy", pch = 19, cex = 1.6)
+
+    # Panel 2: histogram of difference scores
+    hist(d$diff, breaks = 12, col = "tomato", border = "white",
+         main = "Distribution of Difference Scores",
+         xlab = "Difference (C2 - C1)")
+    abline(v = 0, col = "gray40", lwd = 2, lty = 3)
+    abline(v = mean(d$diff), col = "navy", lwd = 3, lty = 2)
+    legend("topleft",
+           legend = c("Zero (H₀)", sprintf("Mean diff = %.2f", mean(d$diff))),
+           col = c("gray40", "navy"), lwd = 2, lty = c(3, 2), bty = "n", cex = 0.85)
+  })
+
+  output$pairedResults <- renderUI({
+    res_p <- paired_test()
+    res_i <- indep_test()
+    t_p   <- res_p$statistic
+    p_p   <- res_p$p.value
+    t_i   <- res_i$statistic
+    p_i   <- res_i$p.value
+    reject <- p_p < 0.05
+    color  <- if (reject) "#c0392b" else "#27ae60"
+    decision <- if (reject) "Reject H₀: Mean difference ≠ 0"
+                else "Fail to reject H₀: Mean difference = 0"
+
+    tags$div(
+      style = paste0("background:#f9f9f9; border-left:4px solid ", color,
+                     "; padding:10px 14px; margin-top:10px; border-radius:4px;"),
+      tags$b("Paired t-Test Results:"), tags$br(),
+      sprintf("t(%.0f) = %.3f", res_p$parameter, t_p), tags$br(),
+      sprintf("p-value = %.4f", p_p), tags$br(),
+      tags$b(decision), tags$br(), tags$br(),
+      tags$b("Compare to Independent Samples t-Test on same data:"), tags$br(),
+      sprintf("t(%.0f) = %.3f, p = %.4f", res_i$parameter, t_i, p_i), tags$br(),
+      tags$em("Notice how the paired test typically has a larger |t| and smaller p-value when between-subject variability is high.")
+    )
+  })
+}
+
+shinyApp(ui = ui, server = server)
+```
+
 ---
 
 # 5. One-Way ANOVA
 
-ANOVA (Analysis of Variance) tests whether **2 or more group means** are equal. In practice, it's usually used for **3 or more group means**, but it's important to understand that you can use it for comparing two groups. In this case, it actually gives you the **same p-value as a pooled two-sample t-test!!** 
+ANOVA (Analysis of Variance) tests whether **2 or more group means** are equal. In practice, it's usually used for **3 or more group means**, but it's important to understand that you can use it for comparing two groups. In this case, it actually gives you the **same p-value as a pooled two-sample t-test!** 
 In other words, when performing an ANOVA for two groups:
 $$F = t^2$$
+
+Remember that this is **NOT** the case when there are 3 or more groups, which is the usual time you'll see ANOVA being used. 
+
+ The null hypothesis is that there is no difference between any of the group means. If you get a significant *p*-value on these tests, you often will follow up with a *t*-test to identify which of the groups has the difference. 
 
 It partitions total variance into:
 
@@ -484,7 +627,7 @@ $$F = \frac{MS_{Between}}{MS_{Within}} = \frac{SS_B / (k-1)}{SS_W / (N-k)}$$
 
 ## 5a. Between-Groups ANOVA
 
-Independent groups — different subjects in each condition.
+Independent groups — different subjects in each condition. This is roughly analogous to the independent-sample *t*-test. You assume that there is no underlying structure or shared variance between your groups in this case. 
 
 ```{shinylive-r}
 #| viewerHeight: 620

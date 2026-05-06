@@ -419,13 +419,22 @@ shinyApp(ui = ui, server = server)
 </section>
 <section id="two-sample-t-test" class="level1">
 <h1>4. Two-Sample <em>t</em>-Test</h1>
-<p>A <strong>two-sample <em>t</em>-test</strong> tests whether the means of two independent groups differ:</p>
+<p>A <strong>two-sample <em>t</em>-test</strong> tests whether the means of two groups differ:</p>
 <p><span class="math display">\[H_0: \mu_1 = \mu_2\]</span></p>
+<p>We can use either <strong>independent</strong> or <strong>dependent</strong> tests based on what our two groups represent.</p>
+<p><strong>When to use which:</strong></p>
+<ul>
+<li><strong>Independent samples t-test:</strong> Different subjects in each group (e.g., treatment vs.&nbsp;control with separate participants)</li>
+<li><strong>Paired t-test:</strong> Same subjects measured twice (e.g., pre-test vs.&nbsp;post-test, or same subject across two conditions)</li>
+</ul>
+<section id="a.-independent-samples" class="level2">
+<h2 class="anchored" data-anchor-id="a.-independent-samples">4a. Independent samples</h2>
 <p>Two variants:</p>
 <ul>
 <li><strong>Pooled (equal variances assumed):</strong> combines variance estimates; uses <em>n₁ + n₂ − 2</em> df</li>
 <li><strong>Welch (unequal variances):</strong> uses separate variance estimates with adjusted (Satterthwaite) df — generally safer, but not something you need to know for the midterm!. It might be instructive for you to see the difference between the two though, especially when setting the variances far apart from one another. The degrees of freedom for this version are adjusted.</li>
 </ul>
+<p><strong>CRITICAL: DON’T WORRY ABOUT THE WELCH TEST FOR ANYTHING OTHER THAN CURIOSITY</strong> (for now at least)</p>
 <p><strong>How to use this app:</strong> Slide Group 1 and Group 2 means apart to see when the test becomes significant. Toggle between pooled and Welch to compare.</p>
 <pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
@@ -537,11 +546,136 @@ server &lt;- function(input, output) {
 
 shinyApp(ui = ui, server = server)
 </code></pre>
+</section>
+<section id="b.-paired-samples-dependent-t-test" class="level2">
+<h2 class="anchored" data-anchor-id="b.-paired-samples-dependent-t-test">4b. Paired Samples (Dependent t-Test)</h2>
+<p>A <strong>paired t-test</strong> is used when the same subjects are measured under two conditions (e.g., before/after treatment, left hand vs right hand, condition A vs condition B for the same person).</p>
+<p>The key insight: by using the <strong>same subjects</strong> in both conditions, we can subtract out individual differences. This is analogous to the relationship between the <strong>between-groups ANOVA</strong> and <strong>within-groups (repeated measures) ANOVA</strong> in Section 5 — using the same subjects across conditions removes between-subject variability from the error term, dramatically increasing statistical power.</p>
+<p>Instead of comparing two independent groups, we compute the <strong>difference score</strong> for each subject and test whether the mean difference is significantly different from zero:</p>
+<p><span class="math display">\[t = \frac{\bar{d} - \mu_0}{s_d / \sqrt{n}}, \quad df = n - 1\]</span></p>
+<p>where <span class="math inline">\(\bar{d}\)</span> is the mean of the difference scores, <span class="math inline">\(s_d\)</span> is the SD of the differences, and <span class="math inline">\(n\)</span> is the <strong>number of pairs</strong> (not total observations).</p>
+<p><strong>How to use this app:</strong> Adjust the between-subject SD and within-subject (error) SD to see how the paired test gains power. When between-subject variability is high but within-subject error is low, the paired test dramatically outperforms the independent test on the same data.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| viewerHeight: 620
+#| standalone: true
+
+library(shiny)
+
+ui &lt;- fluidPage(
+  titlePanel("Paired t-Test"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("n_pairs", "Number of subject pairs", 5, 50, 20),
+      sliderInput("mu_diff", "True mean difference (Condition 2 - Condition 1)",
+                  -5, 5, 1.5, step = 0.25),
+      sliderInput("sd_subj", "Between-subject SD",
+                  0.5, 8, 3, step = 0.5),
+      sliderInput("sd_err",  "Within-subject error SD",
+                  0.25, 5, 1, step = 0.25),
+      tags$hr(),
+      helpText("High between-subject SD + low error SD causes paired test to gain power vs. independent test.")
+    ),
+    mainPanel(
+      plotOutput("pairedPlot", height = "400px"),
+      uiOutput("pairedResults")
+    )
+  )
+)
+
+server &lt;- function(input, output) {
+
+  paired_data &lt;- reactive({
+    set.seed(110)
+    n &lt;- input$n_pairs
+    subj_fx &lt;- rnorm(n, 0, input$sd_subj)  # individual baseline
+    c1 &lt;- subj_fx + rnorm(n, 0, input$sd_err)
+    c2 &lt;- subj_fx + input$mu_diff + rnorm(n, 0, input$sd_err)
+    data.frame(subject = 1:n, c1 = c1, c2 = c2, diff = c2 - c1)
+  })
+
+  paired_test &lt;- reactive({
+    d &lt;- paired_data()
+    t.test(d$c2, d$c1, paired = TRUE)
+  })
+
+  indep_test &lt;- reactive({
+    d &lt;- paired_data()
+    t.test(d$c2, d$c1, paired = FALSE, var.equal = TRUE)
+  })
+
+  output$pairedPlot &lt;- renderPlot({
+    d &lt;- paired_data()
+    res &lt;- paired_test()
+    t_ob &lt;- res$statistic
+    df   &lt;- res$parameter
+    t_crit &lt;- qt(0.975, df)
+
+    par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+    # Panel 1: individual subject trajectories
+    ylim_r &lt;- range(c(d$c1, d$c2)) + c(-1, 1)
+    plot(1:2, c(mean(d$c1), mean(d$c2)), type = "n",
+         xlim = c(0.5, 2.5), ylim = ylim_r,
+         xlab = "Condition", ylab = "Value",
+         main = "Individual Subject Trajectories",
+         xaxt = "n")
+    axis(1, at = 1:2, labels = c("C1", "C2"))
+
+    for (i in 1:nrow(d)) {
+      lines(1:2, c(d$c1[i], d$c2[i]), col = rgb(0, 0, 0.8, 0.3), lwd = 1)
+      points(1:2, c(d$c1[i], d$c2[i]), col = rgb(0, 0, 0.8, 0.4), pch = 16, cex = 0.8)
+    }
+    lines(1:2, c(mean(d$c1), mean(d$c2)), col = "navy", lwd = 3)
+    points(1:2, c(mean(d$c1), mean(d$c2)), col = "navy", pch = 19, cex = 1.6)
+
+    # Panel 2: histogram of difference scores
+    hist(d$diff, breaks = 12, col = "tomato", border = "white",
+         main = "Distribution of Difference Scores",
+         xlab = "Difference (C2 - C1)")
+    abline(v = 0, col = "gray40", lwd = 2, lty = 3)
+    abline(v = mean(d$diff), col = "navy", lwd = 3, lty = 2)
+    legend("topleft",
+           legend = c("Zero (H₀)", sprintf("Mean diff = %.2f", mean(d$diff))),
+           col = c("gray40", "navy"), lwd = 2, lty = c(3, 2), bty = "n", cex = 0.85)
+  })
+
+  output$pairedResults &lt;- renderUI({
+    res_p &lt;- paired_test()
+    res_i &lt;- indep_test()
+    t_p   &lt;- res_p$statistic
+    p_p   &lt;- res_p$p.value
+    t_i   &lt;- res_i$statistic
+    p_i   &lt;- res_i$p.value
+    reject &lt;- p_p &lt; 0.05
+    color  &lt;- if (reject) "#c0392b" else "#27ae60"
+    decision &lt;- if (reject) "Reject H₀: Mean difference ≠ 0"
+                else "Fail to reject H₀: Mean difference = 0"
+
+    tags$div(
+      style = paste0("background:#f9f9f9; border-left:4px solid ", color,
+                     "; padding:10px 14px; margin-top:10px; border-radius:4px;"),
+      tags$b("Paired t-Test Results:"), tags$br(),
+      sprintf("t(%.0f) = %.3f", res_p$parameter, t_p), tags$br(),
+      sprintf("p-value = %.4f", p_p), tags$br(),
+      tags$b(decision), tags$br(), tags$br(),
+      tags$b("Compare to Independent Samples t-Test on same data:"), tags$br(),
+      sprintf("t(%.0f) = %.3f, p = %.4f", res_i$parameter, t_i, p_i), tags$br(),
+      tags$em("Notice how the paired test typically has a larger |t| and smaller p-value when between-subject variability is high.")
+    )
+  })
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
 <hr>
+</section>
 </section>
 <section id="one-way-anova" class="level1">
 <h1>5. One-Way ANOVA</h1>
-<p>ANOVA (Analysis of Variance) tests whether <strong>2 or more group means</strong> are equal. In practice, it’s usually used for <strong>3 or more group means</strong>, but it’s important to understand that you can use it for comparing two groups. In this case, it actually gives you the <strong>same p-value as a pooled two-sample t-test!!</strong> In other words, when performing an ANOVA for two groups: <span class="math display">\[F = t^2\]</span></p>
+<p>ANOVA (Analysis of Variance) tests whether <strong>2 or more group means</strong> are equal. In practice, it’s usually used for <strong>3 or more group means</strong>, but it’s important to understand that you can use it for comparing two groups. In this case, it actually gives you the <strong>same p-value as a pooled two-sample t-test!</strong> In other words, when performing an ANOVA for two groups: <span class="math display">\[F = t^2\]</span></p>
+<p>Remember that this is <strong>NOT</strong> the case when there are 3 or more groups, which is the usual time you’ll see ANOVA being used.</p>
+<p>The null hypothesis is that there is no difference between any of the group means. If you get a significant <em>p</em>-value on these tests, you often will follow up with a <em>t</em>-test to identify which of the groups has the difference.</p>
 <p>It partitions total variance into:</p>
 <ul>
 <li><strong>Between-groups (SS_B):</strong> variance due to group differences</li>
@@ -551,7 +685,7 @@ shinyApp(ui = ui, server = server)
 <p><span class="math display">\[F = \frac{MS_{Between}}{MS_{Within}} = \frac{SS_B / (k-1)}{SS_W / (N-k)}\]</span></p>
 <section id="a.-between-groups-anova" class="level2">
 <h2 class="anchored" data-anchor-id="a.-between-groups-anova">5a. Between-Groups ANOVA</h2>
-<p>Independent groups — different subjects in each condition.</p>
+<p>Independent groups — different subjects in each condition. This is roughly analogous to the independent-sample <em>t</em>-test. You assume that there is no underlying structure or shared variance between your groups in this case.</p>
 <pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
