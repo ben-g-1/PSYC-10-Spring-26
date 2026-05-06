@@ -469,12 +469,14 @@ shinyApp(ui = ui, server = server)
 
 # 5. One-Way ANOVA
 
-ANOVA (Analysis of Variance) tests whether **2 or more group means** are equal. In practice, it's usually used for **3 or more group means**, but it's important to understand that you can use it for comparing two groups. It partitions total variance into:
+ANOVA (Analysis of Variance) tests whether **2 or more group means** are equal. In practice, it's usually used for **3 or more group means**, but it's important to understand that you can use it for comparing two groups. 
+
+It partitions total variance into:
 
 - **Between-groups (SS_B):** variance due to group differences
 - **Within-groups / Error (SS_W):** variance within groups
 
-The **F-statistic** = MS_Between / MS_Within. Large F → means differ more than chance.
+The **F-statistic** = MS_Between / MS_Within. Large F indicates that the **means differ more than chance**.
 
 $$F = \frac{MS_{Between}}{MS_{Within}} = \frac{SS_B / (k-1)}{SS_W / (N-k)}$$
 
@@ -613,7 +615,9 @@ The same subjects are measured across all conditions. Subject-to-subject variabi
 
 $$F_{RM} = \frac{MS_{Conditions}}{MS_{Conditions \times Subjects}}$$
 
-The line plot below shows individual "subjects" across conditions — parallel lines → low within-subject error → high *F*.
+The line plot below shows individual "subjects" across conditions. Parallel lines are good and indicate low within-subject error. This results in a high *F*.
+
+REMEMBER: While t-scores are universally accepted as having clearly delineated effect sizes, **F tests do not have a universal effect size**. Depending on your dataset, 
 
 ```{shinylive-r}
 #| viewerHeight: 620
@@ -630,7 +634,7 @@ ui <- fluidPage(
       sliderInput("mu_diff","Mean difference across conditions", 0, 8, 2, step = 0.5),
       sliderInput("sd_subj","Between-subject SD",      0.5, 8, 3, step = 0.5),
       sliderInput("sd_err", "Within-subject error SD", 0.5, 5, 1, step = 0.25),
-      helpText("High between-subject SD + low error SD → RM ANOVA gains the most power.")
+      helpText("High between-subject SD + low error SD = RM ANOVA gains the most power.")
     ),
     mainPanel(
       plotOutput("rmPlot", height = "380px"),

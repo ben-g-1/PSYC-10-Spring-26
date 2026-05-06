@@ -541,12 +541,13 @@ shinyApp(ui = ui, server = server)
 </section>
 <section id="one-way-anova" class="level1">
 <h1>5. One-Way ANOVA</h1>
-<p>ANOVA (Analysis of Variance) tests whether <strong>2 or more group means</strong> are equal. In practice, it’s usually used for <strong>3 or more group means</strong>, but it’s important to understand that you can use it for comparing two groups. It partitions total variance into:</p>
+<p>ANOVA (Analysis of Variance) tests whether <strong>2 or more group means</strong> are equal. In practice, it’s usually used for <strong>3 or more group means</strong>, but it’s important to understand that you can use it for comparing two groups.</p>
+<p>It partitions total variance into:</p>
 <ul>
 <li><strong>Between-groups (SS_B):</strong> variance due to group differences</li>
 <li><strong>Within-groups / Error (SS_W):</strong> variance within groups</li>
 </ul>
-<p>The <strong>F-statistic</strong> = MS_Between / MS_Within. Large F → means differ more than chance.</p>
+<p>The <strong>F-statistic</strong> = MS_Between / MS_Within. Large F indicates that the <strong>means differ more than chance</strong>.</p>
 <p><span class="math display">\[F = \frac{MS_{Between}}{MS_{Within}} = \frac{SS_B / (k-1)}{SS_W / (N-k)}\]</span></p>
 <section id="a.-between-groups-anova" class="level2">
 <h2 class="anchored" data-anchor-id="a.-between-groups-anova">5a. Between-Groups ANOVA</h2>
@@ -680,7 +681,8 @@ shinyApp(ui = ui, server = server)
 <h2 class="anchored" data-anchor-id="b.-within-groups-repeated-measures-anova">5b. Within-Groups (Repeated Measures) ANOVA</h2>
 <p>The same subjects are measured across all conditions. Subject-to-subject variability is <strong>removed</strong> from the error term, dramatically increasing statistical power.</p>
 <p><span class="math display">\[F_{RM} = \frac{MS_{Conditions}}{MS_{Conditions \times Subjects}}\]</span></p>
-<p>The line plot below shows individual “subjects” across conditions — parallel lines → low within-subject error → high <em>F</em>.</p>
+<p>The line plot below shows individual “subjects” across conditions. Parallel lines are good and indicate low within-subject error. This results in a high <em>F</em>.</p>
+<p>REMEMBER: While t-scores are universally accepted as having clearly delineated effect sizes, <strong>F tests do not have a universal effect size</strong>. Depending on your dataset,</p>
 <pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -698,7 +700,7 @@ ui &lt;- fluidPage(
       sliderInput("mu_diff","Mean difference across conditions", 0, 8, 2, step = 0.5),
       sliderInput("sd_subj","Between-subject SD",      0.5, 8, 3, step = 0.5),
       sliderInput("sd_err", "Within-subject error SD", 0.5, 5, 1, step = 0.25),
-      helpText("High between-subject SD + low error SD → RM ANOVA gains the most power.")
+      helpText("High between-subject SD + low error SD = RM ANOVA gains the most power.")
     ),
     mainPanel(
       plotOutput("rmPlot", height = "380px"),
