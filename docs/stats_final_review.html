@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ben Graul">
-<meta name="dcterms.date" content="2026-05-06">
+<meta name="dcterms.date" content="2026-06-03">
 
-<title>Midterm 1 Interactive Review</title>
+<title>PSYC 10 Final – Interactive Review</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -25,21 +25,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="stats_review_files/libs/clipboard/clipboard.min.js"></script>
-<script src="stats_review_files/libs/quarto-html/quarto.js"></script>
-<script src="stats_review_files/libs/quarto-html/popper.min.js"></script>
-<script src="stats_review_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="stats_review_files/libs/quarto-html/anchor.min.js"></script>
-<link href="stats_review_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="stats_review_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="stats_review_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="stats_review_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="stats_review_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="stats_final_review_files/libs/clipboard/clipboard.min.js"></script>
+<script src="stats_final_review_files/libs/quarto-html/quarto.js"></script>
+<script src="stats_final_review_files/libs/quarto-html/popper.min.js"></script>
+<script src="stats_final_review_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="stats_final_review_files/libs/quarto-html/anchor.min.js"></script>
+<link href="stats_final_review_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="stats_final_review_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="stats_final_review_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="stats_final_review_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="stats_final_review_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <meta name="shinylive:serviceworker_dir" content=".">
-<script src="stats_review_files/libs/quarto-contrib/shinylive-0.10.8/shinylive/load-shinylive-sw.js" type="module"></script>
-<script src="stats_review_files/libs/quarto-contrib/shinylive-0.10.8/shinylive/run-python-blocks.js" type="module"></script>
-<link href="stats_review_files/libs/quarto-contrib/shinylive-0.10.8/shinylive/shinylive.css" rel="stylesheet">
-<link href="stats_review_files/libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
+<script src="stats_final_review_files/libs/quarto-contrib/shinylive-0.10.8/shinylive/load-shinylive-sw.js" type="module"></script>
+<script src="stats_final_review_files/libs/quarto-contrib/shinylive-0.10.8/shinylive/run-python-blocks.js" type="module"></script>
+<link href="stats_final_review_files/libs/quarto-contrib/shinylive-0.10.8/shinylive/shinylive.css" rel="stylesheet">
+<link href="stats_final_review_files/libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
+<script src="stats_final_review_files/libs/quarto-diagram/mermaid.min.js"></script>
+<script src="stats_final_review_files/libs/quarto-diagram/mermaid-init.js"></script>
+<link href="stats_final_review_files/libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -73,15 +76,43 @@ window.Quarto = {
 
 </head>
 
-<body class="fullcontent">
+<body>
 
-<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tests on the final</h2>
+   
+  <ul class="collapse">
+  <li><a href="#choosing-the-right-test" id="toc-choosing-the-right-test" class="nav-link active" data-scroll-target="#choosing-the-right-test">0. Choosing the right test</a></li>
+  <li><a href="#central-limit-theorem-clt" id="toc-central-limit-theorem-clt" class="nav-link" data-scroll-target="#central-limit-theorem-clt">1. Central Limit Theorem (CLT)</a></li>
+  <li><a href="#z-test" id="toc-z-test" class="nav-link" data-scroll-target="#z-test">2. Z-Test</a></li>
+  <li><a href="#one-sample-t-test" id="toc-one-sample-t-test" class="nav-link" data-scroll-target="#one-sample-t-test">3. One-Sample <em>t</em>-Test</a></li>
+  <li><a href="#two-sample-t-test" id="toc-two-sample-t-test" class="nav-link" data-scroll-target="#two-sample-t-test">4. Two-Sample <em>t</em>-Test</a>
+  <ul class="collapse">
+  <li><a href="#a.-independent-samples" id="toc-a.-independent-samples" class="nav-link" data-scroll-target="#a.-independent-samples">4a. Independent samples</a></li>
+  <li><a href="#b.-paired-samples-dependent-t-test" id="toc-b.-paired-samples-dependent-t-test" class="nav-link" data-scroll-target="#b.-paired-samples-dependent-t-test">4b. Paired Samples (Dependent t-Test)</a></li>
+  </ul></li>
+  <li><a href="#confidence-intervals-effect-sizes" id="toc-confidence-intervals-effect-sizes" class="nav-link" data-scroll-target="#confidence-intervals-effect-sizes">5. Confidence Intervals &amp; Effect Sizes</a></li>
+  <li><a href="#one-way-anova" id="toc-one-way-anova" class="nav-link" data-scroll-target="#one-way-anova">6. One-Way ANOVA</a>
+  <ul class="collapse">
+  <li><a href="#a.-between-groups-anova" id="toc-a.-between-groups-anova" class="nav-link" data-scroll-target="#a.-between-groups-anova">6a. Between-Groups ANOVA</a></li>
+  <li><a href="#b.-within-groups-repeated-measures-anova" id="toc-b.-within-groups-repeated-measures-anova" class="nav-link" data-scroll-target="#b.-within-groups-repeated-measures-anova">6b. Within-Groups (Repeated Measures) ANOVA</a></li>
+  </ul></li>
+  <li><a href="#two-way-anova" id="toc-two-way-anova" class="nav-link" data-scroll-target="#two-way-anova">7. Two-Way ANOVA</a></li>
+  <li><a href="#correlation-pearsons-r" id="toc-correlation-pearsons-r" class="nav-link" data-scroll-target="#correlation-pearsons-r">8. Correlation (Pearson’s r)</a></li>
+  <li><a href="#linear-regression" id="toc-linear-regression" class="nav-link" data-scroll-target="#linear-regression">9. Linear Regression</a></li>
+  <li><a href="#chi-square" id="toc-chi-square" class="nav-link" data-scroll-target="#chi-square">10. Chi-Square</a></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+</div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Midterm 1 Interactive Review</h1>
+<h1 class="title">PSYC 10 Final – Interactive Review</h1>
 <p class="subtitle lead">PSYC 10 – Spring 2026</p>
 </div>
 
@@ -106,7 +137,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 6, 2026</p>
+      <p class="date">June 3, 2026</p>
     </div>
   </div>
   
@@ -118,32 +149,173 @@ window.Quarto = {
 </header>
 
 
-<p>This notebook provides interactive visualizations for five core statistical concepts covered in PSYC 10 with Dr.&nbsp;Samantha Wray.</p>
-<p>Playing with data is the best ways to develop an intuition for <strong>what’s going on inside</strong> each of the tests that we learn about in class. I struggled to understand WHY any of the formulas worked when I was just applying them, but seeing the way changing one of the variables shifted the entire dataset really helped me.</p>
-<div class="callout callout-style-default callout-tip callout-titled" title="If I were studying for a midterm...">
+<p>This notebook extends the midterm review with every test you are responsible for on the final. The CLT, z-test, one- and two-sample <em>t</em>-test, and one-way ANOVA sections are carried over from the midterm tool. The new material is confidence intervals and effect sizes (Section 5), two-way ANOVA (Section 7), correlation (Section 8), linear regression (Section 9), and chi-square (Section 10).</p>
+<p>Playing with data is one of the best ways to build intuition for <strong>what is going on inside</strong> each test. When I first learned these, the formulas felt arbitrary until I could watch one slider move the whole picture. That is what this tool is for.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="If I were studying for the final...">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-If I were studying for a midterm…
+If I were studying for the final…
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Here’s what I would do with this tool:</p>
+<p>Here is what I would do with this tool:</p>
 <ul>
-<li>Play around with the sliders to see what matters the most when determining significance or effect sizes.</li>
-<li>Find interesting combinations and try to think of what data you could gather that would have the same dynamics.</li>
-<li>Set all but one slider for each test, then try to guess the point that that slider will change your interpretation of results (i.e.&nbsp;when does it cross the significance threshold?).</li>
-<li>Practice saying what my degrees of freedom will be whenever I change the number of samples.</li>
+<li>Drag the sliders until you can predict which way a statistic will move before it moves.</li>
+<li>For each test, find the point where the result crosses the significance threshold, then say out loud why.</li>
+<li>Practice naming your degrees of freedom every time you change a sample size.</li>
+<li>After each visualization, cover the result and write the APA sentence yourself, then check it.</li>
+<li>Spend the most time on Section 0. On the practice final, the single most common question is “which test is appropriate, be as specific as possible.”</li>
 </ul>
 </div>
 </div>
+<section id="choosing-the-right-test" class="level1">
+<h1>0. Choosing the right test</h1>
+<p>More points on this final come from picking the correct test than from any single calculation. The questions usually end with “be as specific as possible,” so a vague answer like “a t-test” or “ANOVA” will lose points. Name the full test, including between- vs within-subjects and one- vs two-way.</p>
+<p>Work down from your outcome variable.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TD
+    A[What is your outcome measure?] --&gt; B[Counts / categories]
+    A --&gt; C[A continuous score]
+
+    B --&gt; B1[One categorical variable&lt;br/&gt;vs a hypothesized distribution]
+    B --&gt; B2[Two categorical variables,&lt;br/&gt;testing for association]
+    B1 --&gt; B1a[Chi-square goodness of fit]
+    B2 --&gt; B2a[Chi-square test of independence]
+
+    C --&gt; D[Relationship between&lt;br/&gt;two continuous variables?]
+    C --&gt; E[Comparing means?]
+
+    D --&gt; D1[Describe strength and direction]
+    D --&gt; D2[Predict Y from X / fit a line]
+    D1 --&gt; D1a[Pearson correlation r]
+    D2 --&gt; D2a[Linear regression]
+
+    E --&gt; F[One group vs a&lt;br/&gt;known/hypothesized value]
+    E --&gt; G[Two conditions]
+    E --&gt; H[Three or more conditions,&lt;br/&gt;one factor]
+    E --&gt; I[Two factors]
+
+    F --&gt; F1{Population SD known?}
+    F1 --&gt;|Yes| F1a[z-test]
+    F1 --&gt;|No| F1b[One-sample t-test]
+
+    G --&gt; G1{Same subjects&lt;br/&gt;in both conditions?}
+    G1 --&gt;|Different subjects| G1a[Independent-samples t-test]
+    G1 --&gt;|Same subjects| G1b[Paired / related-samples t-test]
+
+    H --&gt; H1{Same subjects&lt;br/&gt;across conditions?}
+    H1 --&gt;|Different subjects| H1a[One-way between-subjects ANOVA]
+    H1 --&gt;|Same subjects| H1b[One-way within-subjects ANOVA]
+
+    I --&gt; I1[Two-way ANOVA&lt;br/&gt;two main effects + interaction]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Measurement scales (they show up every term)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Measurement scales (they show up every term)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The scale of your data decides what is even possible. Two mnemonics from the midterm review:</p>
+<ul>
+<li><strong>Order, Subtraction, Division, Zero</strong>: “Orange Snakes Dunk Zebras.” Ordinal adds order, interval allows subtraction (equal spacing), ratio allows division and has a true zero.</li>
+<li><strong>Nominal, Ordinal, Interval, Ratio</strong>: “No Order Is Right.”</li>
+</ul>
+<p>Nominal and ordinal data are usually counts, which points you toward chi-square. Interval and ratio data are scores, which point you toward the mean-based tests and correlation/regression.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Null hypotheses, all in one place">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Null hypotheses, all in one place
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Test</th>
+<th>Null hypothesis (H₀)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>One-sample t / z</td>
+<td><span class="math inline">\(\mu = \mu_0\)</span></td>
+</tr>
+<tr class="even">
+<td>Independent-samples t</td>
+<td><span class="math inline">\(\mu_1 = \mu_2\)</span></td>
+</tr>
+<tr class="odd">
+<td>Paired-samples t</td>
+<td><span class="math inline">\(\mu_d = 0\)</span></td>
+</tr>
+<tr class="even">
+<td>One-way ANOVA</td>
+<td><span class="math inline">\(\mu_1 = \mu_2 = \dots = \mu_k\)</span></td>
+</tr>
+<tr class="odd">
+<td>Two-way ANOVA</td>
+<td>No main effect of A; no main effect of B; no A×B interaction</td>
+</tr>
+<tr class="even">
+<td>Correlation</td>
+<td><span class="math inline">\(\rho = 0\)</span></td>
+</tr>
+<tr class="odd">
+<td>Linear regression</td>
+<td>slope <span class="math inline">\(\beta = 0\)</span></td>
+</tr>
+<tr class="even">
+<td>Chi-square</td>
+<td>the variables are independent / observed frequencies match expected</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="One-tailed or two-tailed?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+One-tailed or two-tailed?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The mean-based and relationship tests can be run one- or two-tailed: z-test, one-sample t, two-sample t, Pearson correlation, and linear regression. Chi-square is non-directional by construction, so it is not described as one- or two-tailed.</p>
+</div>
+</div>
 <hr>
+</section>
 <section id="central-limit-theorem-clt" class="level1">
 <h1>1. Central Limit Theorem (CLT)</h1>
 <p>The <strong>Central Limit Theorem</strong> states that the sampling distribution of the sample mean approaches a Normal distribution as the sample size (n) grows — regardless of the shape of the underlying population distribution.</p>
-<p>Key takeaways:</p>
+<p>Key takeaways</p>
 <ul>
 <li>The <strong>mean</strong> of the sampling distribution equals the population mean (μ)</li>
 <li>The <strong>spread</strong> (standard error) shrinks as sample size <em>n</em> increases: SE = σ / √n</li>
@@ -511,7 +683,7 @@ The Null Hypothesis
 <p>Two variants:</p>
 <ul>
 <li><strong>Pooled (equal variances assumed):</strong> combines variance estimates; uses <em>n₁ + n₂ − 2</em> df</li>
-<li><strong>Welch (unequal variances):</strong> uses separate variance estimates with adjusted (Satterthwaite) df — generally safer, but not something you need to know for the midterm!. It might be instructive for you to see the difference between the two though, especially when setting the variances far apart from one another. The degrees of freedom for this version are adjusted.</li>
+<li><strong>Welch (unequal variances):</strong> uses separate variance estimates with adjusted (Satterthwaite) df — generally safer, but not something you need to know for this course!. It might be instructive for you to see the difference between the two though, especially when setting the variances far apart from one another. The degrees of freedom for this version are adjusted.</li>
 </ul>
 <p><strong>CRITICAL: DON’T WORRY ABOUT THE WELCH TEST FOR ANYTHING OTHER THAN CURIOSITY</strong> (for now at least)</p>
 <p><strong>How to use this app:</strong> Slide Group 1 and Group 2 means apart to see when the test becomes significant. Toggle between pooled and Welch to compare.</p>
@@ -657,7 +829,7 @@ The Key Insight
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>By using the <strong>same subjects</strong> in both conditions, we can subtract out individual differences. This is analogous to the relationship between the <strong>between-groups ANOVA</strong> and <strong>within-groups (repeated measures) ANOVA</strong> in Section 5 — using the same subjects across conditions removes between-subject variability from the error term, dramatically increasing statistical power.</p>
+<p>By using the <strong>same subjects</strong> in both conditions, we can subtract out individual differences. This is analogous to the relationship between the <strong>between-groups ANOVA</strong> and <strong>within-groups (repeated measures) ANOVA</strong> in Section 6 — using the same subjects across conditions removes between-subject variability from the error term, dramatically increasing statistical power.</p>
 </div>
 </div>
 <p><strong>How to use this app:</strong> Adjust the between-subject SD and within-subject (error) SD to see how the paired test gains power. When between-subject variability is high but within-subject error is low, the paired test dramatically outperforms the independent test on the same data. Notice how small of a difference can be detected if you maximize the sample size and minimize within-subject error!</p>
@@ -774,11 +946,134 @@ server &lt;- function(input, output) {
 }
 
 shinyApp(ui = ui, server = server)</code></pre>
+</section>
+</section>
+<section id="confidence-intervals-effect-sizes" class="level1">
+<h1>5. Confidence Intervals &amp; Effect Sizes</h1>
+<p>Hypothesis testing gives you a yes/no decision. <strong>Estimation</strong> asks a different question: what range of values is plausible for the parameter? A <strong>confidence interval</strong> sets an upper and lower limit that, across repeated samples, contains the population value a set percentage of the time.</p>
+<p><span class="math display">\[\text{CI} = \bar{x} \pm t(s_{\bar{x}}), \quad s_{\bar{x}} = \frac{s}{\sqrt{n}}\]</span></p>
+<div class="callout callout-style-default callout-note callout-titled" title="The link between a CI and a hypothesis test">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The link between a CI and a hypothesis test
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A 95% confidence interval and a two-tailed test at α = 0.05 carry the same information. If the hypothesized value <span class="math inline">\(\mu_0\)</span> falls <strong>outside</strong> the interval, you would reject H₀. If it falls <strong>inside</strong>, you retain H₀. Watch the decision box flip as you slide <span class="math inline">\(\mu_0\)</span> across an interval edge.</p>
+</div>
+</div>
+<p><strong>Effect sizes</strong> answer “how big,” which significance alone never tells you. The sheet gives you three:</p>
+<ul>
+<li><strong>Cohen’s d</strong> <span class="math inline">\(= \dfrac{\bar{x} - \mu_0}{s}\)</span>, in standard-deviation units (small 0.2, medium 0.5, large 0.8).</li>
+<li><strong>Proportion of variance</strong> <span class="math inline">\(r^2 = \dfrac{t^2}{t^2 + df}\)</span> (item 11), the share of variability explained.</li>
+<li><strong>Omega-squared</strong> <span class="math inline">\(\omega^2 = \dfrac{t^2 - 1}{t^2 + df}\)</span> (item 12), a more conservative version of the same idea.</li>
+</ul>
+<p><strong>How to use this app:</strong> Move <span class="math inline">\(\mu_0\)</span> toward and past the interval edge and watch the decision flip. Then change <span class="math inline">\(n\)</span> and <span class="math inline">\(s\)</span> to see the interval tighten or widen, and notice that Cohen’s d does <strong>not</strong> depend on <span class="math inline">\(n\)</span> while the p-value does.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| viewerHeight: 560
+#| standalone: true
+
+library(shiny)
+
+ui &lt;- fluidPage(
+  titlePanel("Confidence Interval &amp; Effect Size (one mean)"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("xbar",  "Observed sample mean (x̄)", 15, 25, 21, step = 0.5),
+      sliderInput("mu0",   "Hypothesized mean (μ₀)",   15, 25, 20, step = 0.5),
+      sliderInput("s",     "Sample SD (s)",            0.5, 6, 2, step = 0.1),
+      sliderInput("n",     "Sample size (n)",          5, 100, 30),
+      selectInput("conf",  "Confidence level",
+        choices = c("90%" = 0.90, "95%" = 0.95, "99%" = 0.99), selected = 0.95)
+    ),
+    mainPanel(
+      plotOutput("ciPlot", height = "330px"),
+      uiOutput("ciResults")
+    )
+  )
+)
+
+server &lt;- function(input, output) {
+
+  stats &lt;- reactive({
+    conf &lt;- as.numeric(input$conf)
+    df   &lt;- input$n - 1
+    se   &lt;- input$s / sqrt(input$n)
+    tcrit &lt;- qt(1 - (1 - conf) / 2, df)
+    lo   &lt;- input$xbar - tcrit * se
+    hi   &lt;- input$xbar + tcrit * se
+    t_stat &lt;- (input$xbar - input$mu0) / se
+    p_val  &lt;- 2 * pt(-abs(t_stat), df)
+    d      &lt;- (input$xbar - input$mu0) / input$s
+    r2     &lt;- t_stat^2 / (t_stat^2 + df)
+    w2     &lt;- (t_stat^2 - 1) / (t_stat^2 + df)
+    list(conf = conf, df = df, se = se, lo = lo, hi = hi,
+         t = t_stat, p = p_val, d = d, r2 = r2, w2 = max(w2, 0))
+  })
+
+  output$ciPlot &lt;- renderPlot({
+    s &lt;- stats()
+    par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+    # Panel 1: the interval on a number line
+    inside &lt;- (input$mu0 &gt;= s$lo &amp;&amp; input$mu0 &lt;= s$hi)
+    band   &lt;- if (inside) rgb(0.15, 0.68, 0.38, 0.25) else rgb(0.75, 0.22, 0.17, 0.25)
+    xr &lt;- range(c(s$lo, s$hi, input$mu0)) + c(-1, 1)
+    plot(NA, xlim = xr, ylim = c(0, 1), yaxt = "n", ylab = "",
+         xlab = "Value", main = sprintf("%d%% Confidence Interval", round(s$conf * 100)))
+    rect(s$lo, 0.35, s$hi, 0.65, col = band, border = NA)
+    segments(s$lo, 0.5, s$hi, 0.5, lwd = 3, col = "gray30")
+    segments(c(s$lo, s$hi), 0.4, c(s$lo, s$hi), 0.6, lwd = 3, col = "gray30")
+    points(input$xbar, 0.5, pch = 19, cex = 1.8, col = "navy")
+    abline(v = input$mu0, col = "tomato", lwd = 2.5, lty = 2)
+    text(input$xbar, 0.78, sprintf("x̄ = %.2f", input$xbar), col = "navy", cex = 0.9)
+    text(input$mu0, 0.22, sprintf("μ₀ = %.1f", input$mu0), col = "tomato", cex = 0.9)
+    legend("topleft", legend = sprintf("[%.2f, %.2f]", s$lo, s$hi), bty = "n", cex = 0.9)
+
+    # Panel 2: Cohen's d against conventional benchmarks
+    dd &lt;- s$d
+    plot(NA, xlim = c(0, max(1, abs(dd) * 1.2)), ylim = c(0, 1), yaxt = "n", ylab = "",
+         xlab = "|Cohen's d|", main = "Effect size (Cohen's d)")
+    abline(v = c(0.2, 0.5, 0.8), col = "gray70", lty = 3)
+    text(c(0.2, 0.5, 0.8), 0.95, c("small", "medium", "large"), col = "gray50", cex = 0.8)
+    segments(0, 0.5, abs(dd), 0.5, lwd = 8, col = rgb(0.18, 0.53, 0.78, 0.7))
+    points(abs(dd), 0.5, pch = 19, cex = 1.5, col = "navy")
+    text(abs(dd), 0.3, sprintf("d = %.2f", dd), col = "navy", cex = 1)
+  })
+
+  output$ciResults &lt;- renderUI({
+    s &lt;- stats()
+    inside &lt;- (input$mu0 &gt;= s$lo &amp;&amp; input$mu0 &lt;= s$hi)
+    color  &lt;- if (inside) "#27ae60" else "#c0392b"
+    decision &lt;- if (inside)
+      sprintf("μ₀ = %.1f is inside the interval: retain H₀ (consistent with p ≥ %.2f)",
+              input$mu0, 1 - s$conf)
+    else
+      sprintf("μ₀ = %.1f is outside the interval: reject H₀ (consistent with p &lt; %.2f)",
+              input$mu0, 1 - s$conf)
+    tags$div(
+      style = paste0("background:#f9f9f9; border-left:4px solid ", color,
+                     "; padding:10px 14px; margin-top:10px; border-radius:4px;"),
+      tags$b(sprintf("%d%% CI: [%.2f, %.2f]", round(s$conf * 100), s$lo, s$hi)), tags$br(),
+      sprintf("t(%d) = %.3f, p = %.4f", s$df, s$t, s$p), tags$br(),
+      tags$b(decision), tags$br(), tags$br(),
+      tags$b("Effect sizes: "),
+      sprintf("Cohen's d = %.3f | r² = %.3f | ω² = %.3f", s$d, s$r2, s$w2), tags$br(),
+      tags$em(sprintf("r² says about %.0f%% of the variability is explained.", 100 * s$r2))
+    )
+  })
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
 <hr>
 </section>
-</section>
 <section id="one-way-anova" class="level1">
-<h1>5. One-Way ANOVA</h1>
+<h1>6. One-Way ANOVA</h1>
 <p>ANOVA (Analysis of Variance) tests whether <strong>the variance of 2 or more group means</strong> are equal. In practice, it’s usually used for <strong>3 or more groups</strong>, but it’s important to understand that you can use it for comparing two groups.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Performing an ANOVA on only 2 groups">
 <div class="callout-header d-flex align-content-center">
@@ -819,7 +1114,7 @@ The Null Hypothesis
 <p>The <strong>F-statistic</strong> = MS_Between / MS_Within. Large F indicates that the <strong>means differ more than chance</strong>.</p>
 <p><span class="math display">\[F = \frac{MS_{Between}}{MS_{Within}} = \frac{SS_B / (k-1)}{SS_W / (N-k)}\]</span></p>
 <section id="a.-between-groups-anova" class="level2">
-<h2 class="anchored" data-anchor-id="a.-between-groups-anova">5a. Between-Groups ANOVA</h2>
+<h2 class="anchored" data-anchor-id="a.-between-groups-anova">6a. Between-Groups ANOVA</h2>
 <p>Independent groups — different subjects in each condition. This is roughly analogous to the independent-sample <em>t</em>-test. You assume that there is no underlying structure or shared variance between your groups in this case.</p>
 <pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
@@ -947,7 +1242,7 @@ shinyApp(ui = ui, server = server)
 <hr>
 </section>
 <section id="b.-within-groups-repeated-measures-anova" class="level2">
-<h2 class="anchored" data-anchor-id="b.-within-groups-repeated-measures-anova">5b. Within-Groups (Repeated Measures) ANOVA</h2>
+<h2 class="anchored" data-anchor-id="b.-within-groups-repeated-measures-anova">6b. Within-Groups (Repeated Measures) ANOVA</h2>
 <div class="callout callout-style-default callout-important callout-titled" title="The Null Hypothesis">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1103,9 +1398,559 @@ server &lt;- function(input, output) {
 
 shinyApp(ui = ui, server = server)
 </code></pre>
+</section>
+</section>
+<section id="two-way-anova" class="level1">
+<h1>7. Two-Way ANOVA</h1>
+<p>A <strong>two-way between-subjects ANOVA</strong> has two factors (call them A and B), with different subjects in every cell. Instead of one question it asks three, so it runs three hypothesis tests:</p>
+<ul>
+<li><strong>Main effect of A:</strong> averaging over B, do the levels of A differ?</li>
+<li><strong>Main effect of B:</strong> averaging over A, do the levels of B differ?</li>
+<li><strong>Interaction (A × B):</strong> does the effect of A depend on the level of B?</li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled" title="Reading the interaction plot">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Reading the interaction plot
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Plot the cell means with one line per level of B.</p>
+<ul>
+<li><strong>Parallel lines</strong> mean no interaction. The gap between lines is the same at every level of A.</li>
+<li><strong>Lines that converge, cross, or fan out</strong> signal an interaction. The effect of one factor changes depending on the other.</li>
+</ul>
+<p>When the interaction is significant, interpret it <strong>first</strong>, using simple main effects, before reading the main effects on their own.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Naming the parts (a common fill-in question)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Naming the parts (a common fill-in question)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For a design like “type of media exposure (violent, non-violent, none) and age group (early vs late adolescent) on aggression scores”:</p>
+<ul>
+<li><strong>Dependent variable:</strong> aggression scores (the measured outcome).</li>
+<li><strong>Factor A:</strong> media exposure, with <strong>3 levels</strong>.</li>
+<li><strong>Factor B:</strong> age group, with <strong>2 levels</strong>.</li>
+</ul>
+<p>This is a 3 × 2 design. The app below uses a 2 × 2 so the interaction plot stays readable.</p>
+</div>
+</div>
+<p><strong>How to use this app:</strong> Set the four cell means to make the two lines parallel and watch the interaction F drop toward nonsignificance. Then drag one corner to cross the lines and watch the interaction F climb.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| viewerHeight: 640
+#| standalone: true
+
+library(shiny)
+
+ui &lt;- fluidPage(
+  titlePanel("Two-Way Between-Subjects ANOVA (2 × 2)"),
+  sidebarLayout(
+    sidebarPanel(
+      tags$b("Cell means"),
+      sliderInput("m11", "A1 / B1", 10, 30, 18, step = 0.5),
+      sliderInput("m12", "A1 / B2", 10, 30, 20, step = 0.5),
+      sliderInput("m21", "A2 / B1", 10, 30, 22, step = 0.5),
+      sliderInput("m22", "A2 / B2", 10, 30, 24, step = 0.5),
+      tags$hr(),
+      sliderInput("sd_w", "Within-cell SD", 0.5, 8, 3, step = 0.5),
+      sliderInput("n_c",  "n per cell",      5, 40, 15)
+    ),
+    mainPanel(
+      plotOutput("twoPlot", height = "320px"),
+      tableOutput("twoTable"),
+      uiOutput("twoResult")
+    )
+  )
+)
+
+server &lt;- function(input, output) {
+
+  dat &lt;- reactive({
+    set.seed(110)
+    n &lt;- input$n_c
+    mk &lt;- function(mu) rnorm(n, mu, input$sd_w)
+    data.frame(
+      value = c(mk(input$m11), mk(input$m12), mk(input$m21), mk(input$m22)),
+      A = factor(rep(c("A1", "A1", "A2", "A2"), each = n)),
+      B = factor(rep(c("B1", "B2", "B1", "B2"), each = n))
+    )
+  })
+
+  fit &lt;- reactive({
+    tab &lt;- summary(aov(value ~ A * B, data = dat()))[[1]]
+    ss  &lt;- tab[["Sum Sq"]]
+    list(tab = tab, ss = ss, ss_tot = sum(ss))
+  })
+
+  output$twoPlot &lt;- renderPlot({
+    d  &lt;- dat()
+    cm &lt;- tapply(d$value, list(d$A, d$B), mean)   # rows A1,A2 ; cols B1,B2
+    par(mar = c(4, 4, 3, 1))
+    yr &lt;- range(cm) + c(-2, 2)
+    plot(NA, xlim = c(0.7, 2.3), ylim = yr, xaxt = "n",
+         xlab = "Factor A", ylab = "Cell mean",
+         main = "Interaction plot (one line per level of B)")
+    axis(1, at = 1:2, labels = c("A1", "A2"))
+    lines(1:2, cm[, "B1"], col = "navy",   lwd = 3, type = "b", pch = 19, cex = 1.5)
+    lines(1:2, cm[, "B2"], col = "tomato", lwd = 3, type = "b", pch = 17, cex = 1.5)
+    legend("topleft", legend = c("B1", "B2"),
+           col = c("navy", "tomato"), lwd = 3, pch = c(19, 17), bty = "n", cex = 0.9)
+  })
+
+  output$twoTable &lt;- renderTable({
+    f   &lt;- fit()
+    tab &lt;- f$tab
+    eta &lt;- f$ss / f$ss_tot
+    data.frame(
+      Source = c("Factor A", "Factor B", "A × B", "Error"),
+      SS     = round(f$ss, 2),
+      df     = tab[["Df"]],
+      MS     = round(tab[["Mean Sq"]], 2),
+      F      = c(round(tab[["F value"]][1:3], 3), NA),
+      p      = c(round(tab[["Pr(&gt;F)"]][1:3], 4), NA),
+      "eta sq" = c(round(eta[1:3], 3), NA),
+      check.names = FALSE
+    )
+  }, na = "", striped = TRUE, bordered = TRUE, hover = TRUE)
+
+  output$twoResult &lt;- renderUI({
+    tab &lt;- fit()$tab
+    p   &lt;- tab[["Pr(&gt;F)"]]
+    sig &lt;- function(x) if (!is.na(x) &amp;&amp; x &lt; 0.05) "significant" else "not significant"
+    tags$div(
+      style = "background:#f9f9f9; border-left:4px solid #2c7bb6; padding:10px 14px; border-radius:4px;",
+      tags$b("Decisions (α = 0.05):"), tags$br(),
+      sprintf("Main effect A: %s (p = %.4f)", sig(p[1]), p[1]), tags$br(),
+      sprintf("Main effect B: %s (p = %.4f)", sig(p[2]), p[2]), tags$br(),
+      sprintf("A × B interaction: %s (p = %.4f)", sig(p[3]), p[3]), tags$br(),
+      tags$em("If the interaction is significant, interpret it before the main effects.")
+    )
+  })
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
+<hr>
+</section>
+<section id="correlation-pearsons-r" class="level1">
+<h1>8. Correlation (Pearson’s r)</h1>
+<p><strong>Correlation</strong> describes the strength and direction of the linear relationship between two continuous variables. Pearson’s <em>r</em> runs from −1 to +1: the sign is the direction, and the distance from 0 is the strength.</p>
+<p><span class="math display">\[r = \frac{SS_{XY}}{\sqrt{SS_X \, SS_Y}}, \qquad r^2 = \text{proportion of variance shared}\]</span></p>
+<p>On the exam you may be handed the sums of squares and asked for <em>r</em> and the effect size. With <span class="math inline">\(SS_{XY}\)</span> and the product <span class="math inline">\(SS_X \cdot SS_Y\)</span> in hand, <em>r</em> is one division and a square root, and <span class="math inline">\(r^2\)</span> is just <em>r</em> squared (item 25, then the coefficient of determination).</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Significance depends on n, not just the size of r">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Significance depends on n, not just the size of r
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A given <em>r</em> is significant only if it beats the <strong>critical value</strong> for your degrees of freedom (<span class="math inline">\(df = n - 2\)</span>). With small samples even a fairly large <em>r</em> can fail to reach significance. For example, <span class="math inline">\(r = .26\)</span> with <span class="math inline">\(n = 40\)</span> does <strong>not</strong> clear the two-tailed .05 cutoff. Watch the critical value in the results box as you change <em>n</em>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="What correlation cannot do">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What correlation cannot do
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>Causation.</strong> A relationship does not tell you which variable drives which, or whether a third variable drives both.</li>
+<li><strong>Outliers.</strong> A single off-trend point can inflate or hide a correlation. Use the toggle below to see it.</li>
+<li><strong>Non-linearity.</strong> <em>r</em> only measures the straight-line part of a relationship. A strong curved pattern can still give <em>r</em> near 0.</li>
+<li><strong>Restricted range</strong> narrows the spread of scores and shrinks <em>r</em>.</li>
+</ul>
+</div>
+</div>
+<p><strong>How to use this app:</strong> Set the underlying relationship strength and sample size, then read the observed <em>r</em>, its <em>r²</em>, and whether it clears the critical value. Flip on the outlier to see how much one point can move the result.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| viewerHeight: 560
+#| standalone: true
+
+library(shiny)
+
+ui &lt;- fluidPage(
+  titlePanel("Pearson Correlation"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("rho", "Underlying relationship strength (population r)",
+                  -0.95, 0.95, 0.5, step = 0.05),
+      sliderInput("n",   "Sample size (n)", 5, 150, 40),
+      checkboxInput("outlier", "Add one off-trend outlier", value = FALSE),
+      helpText("df = n − 2. The critical value is the bar a correlation must clear to be significant.")
+    ),
+    mainPanel(
+      plotOutput("scatter", height = "330px"),
+      uiOutput("corResults")
+    )
+  )
+)
+
+server &lt;- function(input, output) {
+
+  dat &lt;- reactive({
+    set.seed(110)
+    n   &lt;- input$n
+    rho &lt;- input$rho
+    x &lt;- rnorm(n)
+    y &lt;- rho * x + sqrt(1 - rho^2) * rnorm(n)
+    x &lt;- 50 + 10 * x
+    y &lt;- 50 + 10 * y
+    if (input$outlier) {
+      x &lt;- c(x, max(x) + 15)
+      y &lt;- c(y, min(y) - 15)
+    }
+    data.frame(x = x, y = y)
+  })
+
+  ct &lt;- reactive({
+    d &lt;- dat()
+    cor.test(d$x, d$y)
+  })
+
+  output$scatter &lt;- renderPlot({
+    d &lt;- dat()
+    r &lt;- unname(ct()$estimate)
+    par(mar = c(4, 4, 3, 1))
+    plot(d$x, d$y, pch = 19, col = rgb(0.18, 0.53, 0.78, 0.6),
+         xlab = "X", ylab = "Y",
+         main = sprintf("Scatter plot (r = %.3f)", r))
+    fit &lt;- lm(y ~ x, data = d)
+    abline(fit, col = "navy", lwd = 2)
+    if (input$outlier)
+      points(d$x[nrow(d)], d$y[nrow(d)], pch = 1, cex = 3, lwd = 2, col = "tomato")
+  })
+
+  output$corResults &lt;- renderUI({
+    d   &lt;- dat()
+    res &lt;- ct()
+    r   &lt;- unname(res$estimate)
+    df  &lt;- unname(res$parameter)
+    p   &lt;- res$p.value
+    tcrit &lt;- qt(0.975, df)
+    rcrit &lt;- tcrit / sqrt(df + tcrit^2)
+    reject &lt;- p &lt; 0.05
+    color  &lt;- if (reject) "#c0392b" else "#27ae60"
+    decision &lt;- if (reject)
+      sprintf("Significant: |r| = %.3f exceeds the critical r of %.3f", abs(r), rcrit)
+    else
+      sprintf("Not significant: |r| = %.3f does not reach the critical r of %.3f", abs(r), rcrit)
+    tags$div(
+      style = paste0("background:#f9f9f9; border-left:4px solid ", color,
+                     "; padding:10px 14px; margin-top:10px; border-radius:4px;"),
+      tags$b(sprintf("r = %.3f, r² = %.3f", r, r^2)), tags$br(),
+      sprintf("t(%d) = %.3f, p = %.4f", df, unname(res$statistic), p), tags$br(),
+      sprintf("Critical r (two-tailed, α = .05, df = %d): ±%.3f", df, rcrit), tags$br(),
+      tags$b(decision), tags$br(),
+      tags$em(sprintf("r² means about %.0f%% of the variance in one variable is shared with the other.",
+                      100 * r^2))
+    )
+  })
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
+<hr>
+</section>
+<section id="linear-regression" class="level1">
+<h1>9. Linear Regression</h1>
+<p>Correlation describes a relationship; <strong>linear regression</strong> fits an equation to it so you can predict one variable from another.</p>
+<p><span class="math display">\[\hat{Y} = bX + a\]</span></p>
+<p>The <strong>predictor</strong> X is the known variable; the <strong>criterion</strong> Y is the one you predict. The slope <em>b</em> is the change in Y for a one-unit change in X (item 27). The intercept <em>a</em> is the predicted Y when X = 0. The line is chosen by <strong>least squares</strong>, the line that makes the squared vertical distances from the points (the <strong>residuals</strong>) as small as possible.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Residuals and homoscedasticity">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Residuals and homoscedasticity
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A <strong>residual</strong> is the gap between an observed point and the line: observed minus predicted. Plotting residuals against X is how you check the regression’s assumptions.</p>
+<ul>
+<li><strong>Homoscedastic:</strong> residuals show roughly even spread across X. This is what you want.</li>
+<li><strong>Heteroscedastic:</strong> the spread fans out or narrows across X. The line still fits, but the model’s error is not constant, which violates an assumption.</li>
+</ul>
+<p>Use the toggle to switch between the two and watch the residual plot.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Prediction is just plugging in">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Prediction is just plugging in
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>To predict, substitute an X into the fitted equation. For <span class="math inline">\(\hat{Y} = -0.13X + 1.72\)</span>, a patient who attends 6 sessions has a predicted score of <span class="math inline">\(-0.13(6) + 1.72 = 0.94\)</span>. You will not fit a regression by hand on this exam, but you are expected to read off the slope and intercept and predict from them.</p>
+</div>
+</div>
+<p><strong>How to use this app:</strong> Set a slope and intercept, then move the prediction slider to read a predicted Y off the line. Turn on heteroscedasticity and watch the residual plot fan out while the line itself barely moves.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| viewerHeight: 580
+#| standalone: true
+
+library(shiny)
+
+ui &lt;- fluidPage(
+  titlePanel("Linear Regression"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("b",  "Slope (b)",            -3, 3, 1.2, step = 0.1),
+      sliderInput("a",  "Intercept (a)",        -5, 20, 5, step = 0.5),
+      sliderInput("noise", "Residual spread",    0.5, 12, 4, step = 0.5),
+      sliderInput("n",  "Sample size (n)",       10, 150, 50),
+      sliderInput("xpred", "Predict Y at X =",   0, 20, 10, step = 0.5),
+      checkboxInput("hetero", "Make residuals heteroscedastic", value = FALSE)
+    ),
+    mainPanel(
+      plotOutput("regPlot", height = "340px"),
+      uiOutput("regResults")
+    )
+  )
+)
+
+server &lt;- function(input, output) {
+
+  dat &lt;- reactive({
+    set.seed(110)
+    n &lt;- input$n
+    x &lt;- runif(n, 0, 20)
+    sd_i &lt;- if (input$hetero) input$noise * (0.25 + 1.5 * (x / 20)) else rep(input$noise, n)
+    y &lt;- input$a + input$b * x + rnorm(n, 0, sd_i)
+    data.frame(x = x, y = y)
+  })
+
+  fit &lt;- reactive(lm(y ~ x, data = dat()))
+
+  output$regPlot &lt;- renderPlot({
+    d   &lt;- dat()
+    f   &lt;- fit()
+    co  &lt;- coef(f)
+    par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+    # Panel 1: scatter + least-squares line + prediction
+    plot(d$x, d$y, pch = 19, col = rgb(0.18, 0.53, 0.78, 0.55),
+         xlab = "X (predictor)", ylab = "Y (criterion)",
+         main = "Least-squares fit")
+    abline(f, col = "navy", lwd = 2.5)
+    ypred &lt;- co[1] + co[2] * input$xpred
+    segments(input$xpred, min(d$y) - 5, input$xpred, ypred, col = "tomato", lty = 2, lwd = 2)
+    segments(min(d$x) - 5, ypred, input$xpred, ypred, col = "tomato", lty = 2, lwd = 2)
+    points(input$xpred, ypred, pch = 19, col = "tomato", cex = 1.6)
+
+    # Panel 2: residual plot
+    res &lt;- resid(f)
+    plot(d$x, res, pch = 19, col = rgb(0.4, 0.4, 0.4, 0.6),
+         xlab = "X", ylab = "Residual (observed − predicted)",
+         main = "Residual plot")
+    abline(h = 0, col = "navy", lwd = 2, lty = 1)
+  })
+
+  output$regResults &lt;- renderUI({
+    f  &lt;- fit()
+    co &lt;- coef(f)
+    r2 &lt;- summary(f)$r.squared
+    ypred &lt;- co[1] + co[2] * input$xpred
+    spread_note &lt;- if (input$hetero)
+      "Residuals fan out across X: heteroscedastic (assumption violated)."
+    else
+      "Residuals are evenly spread across X: homoscedastic (assumption met)."
+    tags$div(
+      style = "background:#f9f9f9; border-left:4px solid #2c7bb6; padding:10px 14px; margin-top:10px; border-radius:4px;",
+      tags$b(sprintf("Fitted equation: Ŷ = %.3f·X + %.3f", co[2], co[1])), tags$br(),
+      sprintf("r² = %.3f  (about %.0f%% of the variance in Y is explained by X)", r2, 100 * r2), tags$br(),
+      sprintf("Predicted Y at X = %.1f:  Ŷ = %.2f", input$xpred, ypred), tags$br(),
+      tags$em(spread_note)
+    )
+  })
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
+<hr>
+</section>
+<section id="chi-square" class="level1">
+<h1>10. Chi-Square</h1>
+<p>Chi-square is for <strong>counts in categories</strong>, not means. It compares the frequencies you observed against the frequencies you would expect. There are two versions, and the exam wants you to name which one.</p>
+<p><span class="math display">\[f_e = \frac{\text{row total} \times \text{column total}}{N}, \qquad \chi^2 = \sum \frac{(f_o - f_e)^2}{f_e}\]</span></p>
+<ul>
+<li><strong>Goodness of fit:</strong> one categorical variable against a hypothesized distribution. <span class="math inline">\(df = k - 1\)</span>, where <em>k</em> is the number of categories.</li>
+<li><strong>Test of independence:</strong> two categorical variables, testing whether they are associated. <span class="math inline">\(df = (\text{rows} - 1)(\text{columns} - 1)\)</span>.</li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled" title="Assumptions, including the soft one">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Assumptions, including the soft one
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Each observation falls in <strong>one and only one</strong> category.</li>
+<li>Observations are <strong>independent</strong> (different, unrelated participants). Splitting one person’s count across two categories breaks this.</li>
+<li>The <strong>soft</strong> assumption that researchers sometimes bend: every <strong>expected</strong> frequency should be at least <strong>5</strong>. The app warns you when this is violated.</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Effect size">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Effect size
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For a 2 × 2 table, the <strong>phi coefficient</strong> <span class="math inline">\(\varphi = \sqrt{\chi^2 / N}\)</span> (item 30). For larger tables, <strong>Cramér’s V</strong> <span class="math inline">\(= \sqrt{\chi^2 / (N \cdot df_{smaller})}\)</span> (item 31), where <span class="math inline">\(df_{smaller}\)</span> is the smaller of (rows − 1) and (columns − 1). For a 2 × 2 the two are identical.</p>
+</div>
+</div>
+<p><strong>How to use this app:</strong> Switch between the two tests. In goodness-of-fit, push one category’s count far from the others and watch χ² grow. In the independence test, make the rows proportional to each other (no association) and watch χ² fall toward 0.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| viewerHeight: 620
+#| standalone: true
+
+library(shiny)
+
+ui &lt;- fluidPage(
+  titlePanel("Chi-Square: Goodness of Fit and Independence"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("mode", "Which test?",
+        choices = c("Goodness of fit" = "gof", "Test of independence" = "ind")),
+      conditionalPanel("input.mode == 'gof'",
+        tags$b("Observed counts (4 categories)"),
+        sliderInput("o1", "Category 1", 0, 60, 10),
+        sliderInput("o2", "Category 2", 0, 60, 14),
+        sliderInput("o3", "Category 3", 0, 60, 20),
+        sliderInput("o4", "Category 4", 0, 60, 16),
+        helpText("Expected = equal split of the total across the 4 categories.")
+      ),
+      conditionalPanel("input.mode == 'ind'",
+        tags$b("Observed 2 × 2 table"),
+        sliderInput("c11", "Row 1, Col 1", 0, 100, 40),
+        sliderInput("c12", "Row 1, Col 2", 0, 100, 20),
+        sliderInput("c21", "Row 2, Col 1", 0, 100, 20),
+        sliderInput("c22", "Row 2, Col 2", 0, 100, 40)
+      )
+    ),
+    mainPanel(
+      plotOutput("chiPlot", height = "320px"),
+      tableOutput("expTable"),
+      uiOutput("chiResults")
+    )
+  )
+)
+
+server &lt;- function(input, output) {
+
+  analysis &lt;- reactive({
+    if (input$mode == "gof") {
+      obs &lt;- c(input$o1, input$o2, input$o3, input$o4)
+      test &lt;- chisq.test(obs)
+      list(mode = "gof", obs = obs, exp = test$expected,
+           stat = unname(test$statistic), df = unname(test$parameter),
+           p = test$p.value, N = sum(obs))
+    } else {
+      m &lt;- matrix(c(input$c11, input$c12, input$c21, input$c22),
+                  nrow = 2, byrow = TRUE)
+      test &lt;- chisq.test(m, correct = FALSE)
+      list(mode = "ind", obs = m, exp = test$expected,
+           stat = unname(test$statistic), df = unname(test$parameter),
+           p = test$p.value, N = sum(m))
+    }
+  })
+
+  output$chiPlot &lt;- renderPlot({
+    a &lt;- analysis()
+    par(mar = c(4, 4, 3, 1))
+    if (a$mode == "gof") {
+      mat &lt;- rbind(Observed = a$obs, Expected = a$exp)
+      barplot(mat, beside = TRUE, col = c("navy", "gray70"), border = "white",
+              names.arg = paste0("C", 1:4),
+              main = "Observed vs Expected", ylab = "Frequency")
+      legend("topright", legend = c("Observed", "Expected"),
+             fill = c("navy", "gray70"), bty = "n")
+    } else {
+      barplot(a$obs, beside = TRUE, col = c("navy", "tomato"), border = "white",
+              names.arg = c("Col 1", "Col 2"),
+              main = "Observed counts by row", ylab = "Frequency")
+      legend("topright", legend = c("Row 1", "Row 2"),
+             fill = c("navy", "tomato"), bty = "n")
+    }
+  })
+
+  output$expTable &lt;- renderTable({
+    a &lt;- analysis()
+    if (a$mode == "gof") {
+      data.frame(Category = paste0("C", 1:4),
+                 Observed = a$obs, Expected = round(a$exp, 2),
+                 check.names = FALSE)
+    } else {
+      e &lt;- round(a$exp, 2)
+      data.frame(Row = c("Row 1", "Row 2"),
+                 "Col 1 (exp)" = e[, 1], "Col 2 (exp)" = e[, 2],
+                 check.names = FALSE)
+    }
+  }, striped = TRUE, bordered = TRUE)
+
+  output$chiResults &lt;- renderUI({
+    a &lt;- analysis()
+    reject &lt;- a$p &lt; 0.05
+    color  &lt;- if (reject) "#c0392b" else "#27ae60"
+    rows &lt;- nrow(as.matrix(a$exp)); cols &lt;- ncol(as.matrix(a$exp))
+    df_small &lt;- if (a$mode == "ind") min(rows - 1, cols - 1) else 1
+    eff &lt;- sqrt(a$stat / (a$N * df_small))
+    eff_name &lt;- if (a$mode == "ind" &amp;&amp; rows == 2 &amp;&amp; cols == 2) "φ (phi)" else
+                if (a$mode == "ind") "Cramér's V" else NA
+    decision &lt;- if (reject) "Reject H₀: the frequencies differ from expected / the variables are associated."
+                else "Retain H₀: no significant departure from expected."
+    warn &lt;- if (min(a$exp) &lt; 5)
+      tags$div(style = "color:#c0392b;", "Warning: an expected frequency is below 5 (assumption violated).")
+    else NULL
+    tags$div(
+      style = paste0("background:#f9f9f9; border-left:4px solid ", color,
+                     "; padding:10px 14px; margin-top:10px; border-radius:4px;"),
+      tags$b(sprintf("χ²(%d) = %.3f, p = %.4f", a$df, a$stat, a$p)), tags$br(),
+      if (a$mode == "ind") tags$span(sprintf("Effect size %s = %.3f", eff_name, eff)) else
+        tags$span(sprintf("Total N = %d, k = 4 categories", a$N)),
+      tags$br(),
+      tags$b(decision),
+      warn
+    )
+  })
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
 <hr>
 <p>NOTE: Please email me (benjamin.e.graul.gr@dartmouth.edu) if you find any errors in this tool!</p>
-</section>
 </section>
 
 </main>
