@@ -99,10 +99,11 @@ window.Quarto = {
   <li><a href="#a.-between-groups-anova" id="toc-a.-between-groups-anova" class="nav-link" data-scroll-target="#a.-between-groups-anova">6a. Between-Groups ANOVA</a></li>
   <li><a href="#b.-within-groups-repeated-measures-anova" id="toc-b.-within-groups-repeated-measures-anova" class="nav-link" data-scroll-target="#b.-within-groups-repeated-measures-anova">6b. Within-Groups (Repeated Measures) ANOVA</a></li>
   </ul></li>
-  <li><a href="#two-way-anova" id="toc-two-way-anova" class="nav-link" data-scroll-target="#two-way-anova">7. Two-Way ANOVA</a></li>
-  <li><a href="#correlation-pearsons-r" id="toc-correlation-pearsons-r" class="nav-link" data-scroll-target="#correlation-pearsons-r">8. Correlation (Pearson’s r)</a></li>
-  <li><a href="#linear-regression" id="toc-linear-regression" class="nav-link" data-scroll-target="#linear-regression">9. Linear Regression</a></li>
-  <li><a href="#chi-square" id="toc-chi-square" class="nav-link" data-scroll-target="#chi-square">10. Chi-Square</a></li>
+  <li><a href="#post-hoc-tests-multiple-comparisons" id="toc-post-hoc-tests-multiple-comparisons" class="nav-link" data-scroll-target="#post-hoc-tests-multiple-comparisons">7. Post-Hoc Tests &amp; Multiple Comparisons</a></li>
+  <li><a href="#two-way-anova" id="toc-two-way-anova" class="nav-link" data-scroll-target="#two-way-anova">8. Two-Way ANOVA</a></li>
+  <li><a href="#correlation-pearsons-r" id="toc-correlation-pearsons-r" class="nav-link" data-scroll-target="#correlation-pearsons-r">9. Correlation (Pearson’s r)</a></li>
+  <li><a href="#linear-regression" id="toc-linear-regression" class="nav-link" data-scroll-target="#linear-regression">10. Linear Regression</a></li>
+  <li><a href="#chi-square" id="toc-chi-square" class="nav-link" data-scroll-target="#chi-square">11. Chi-Square</a></li>
   </ul>
 </nav>
 </div>
@@ -149,8 +150,9 @@ window.Quarto = {
 </header>
 
 
-<p>This notebook extends the midterm review with every test you are responsible for on the final. The CLT, z-test, one- and two-sample <em>t</em>-test, and one-way ANOVA sections are carried over from the midterm tool. The new material is confidence intervals and effect sizes (Section 5), two-way ANOVA (Section 7), correlation (Section 8), linear regression (Section 9), and chi-square (Section 10).</p>
+<p>This notebook extends the midterm review with every test you are responsible for on the final. The CLT, z-test, one- and two-sample <em>t</em>-test, and one-way ANOVA sections are carried over from the midterm tool. The new material is confidence intervals and effect sizes (Section 5), post-hoc tests (Section 7), two-way ANOVA (Section 8), correlation (Section 9), linear regression (Section 10), and chi-square (Section 11).</p>
 <p>Playing with data is one of the best ways to build intuition for <strong>what is going on inside</strong> each test. When I first learned these, the formulas felt arbitrary until I could watch one slider move the whole picture. That is what this tool is for.</p>
+<p>DISCLAIMER: I haven’t seen the final, but this is built from seeing the practice final.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="If I were studying for the final...">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -174,7 +176,7 @@ If I were studying for the final…
 <section id="choosing-the-right-test" class="level1">
 <h1>0. Choosing the right test</h1>
 <p>More points on this final come from picking the correct test than from any single calculation. The questions usually end with “be as specific as possible,” so a vague answer like “a t-test” or “ANOVA” will lose points. Name the full test, including between- vs within-subjects and one- vs two-way.</p>
-<p>Work down from your outcome variable.</p>
+<p>Work down from your outcome variable. You’ll probably have to zoom in- I’ve taken a bit to try and reformat it but it’s not worth the headache for something that’s rendering live.</p>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
 <div>
@@ -307,7 +309,7 @@ One-tailed or two-tailed?
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The mean-based and relationship tests can be run one- or two-tailed: z-test, one-sample t, two-sample t, Pearson correlation, and linear regression. Chi-square is non-directional by construction, so it is not described as one- or two-tailed.</p>
+<p>The mean-based and relationship tests can be run one- or two-tailed: z-test, one-sample t, two-sample t, Pearson correlation, and linear regression. Chi-square is non-directional by construction, so it is not described as one- or two-tailed- you can think of it as functionally two-tailed if that helps.</p>
 </div>
 </div>
 <hr>
@@ -322,9 +324,22 @@ One-tailed or two-tailed?
 <li>Even highly skewed or bimodal populations produce approximately Normal sampling distributions with enough samples</li>
 </ul>
 <p>The tendency for our samples to create this type of normal distribution is what enables most of our other statistical tests.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Why should I care about the Central Limit Theorem?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why should I care about the Central Limit Theorem?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>EVERY parametric test (i.e.&nbsp;everything except chi-square right now) depends on an assumption that there is a “correct” answer to your question, and that if you ask enough people, you will be able to guess or approximate the real answer. That’s why we care about “population” metrics compared to “sample” metrics. We eventually need to assume that our observations are close enough to match the truth because we sampled enough people for each group of our test.</p>
+</div>
+</div>
 <p><strong>How to use this app:</strong> Choose a population shape, set the sample size (<em>n</em>), then drag the “Number of samples” slider slowly from left to right to watch the sampling distribution build up. Try setting your sample size to 1, 10, and 100. Do you see much of a difference beyond that?</p>
 <p>Notable milestones for a normally-distributed dataset: <strong>1 sample</strong> (almost nothing), <strong>10 samples</strong> (rough shape), <strong>100 samples</strong> (clearly bell-shaped), <strong>300 samples</strong> (well-converged).</p>
-<p>However, note how the sample size changes how quickly the correct mean is estimated.</p>
+<p>However, note how the sample size changes how quickly the correct mean is estimated. If we only take one measurement but include 100 people, we get pretty close to the correct answer.</p>
 <pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -946,6 +961,87 @@ server &lt;- function(input, output) {
 }
 
 shinyApp(ui = ui, server = server)</code></pre>
+<section id="watch-the-error-disappear" class="level3">
+<h3 class="anchored" data-anchor-id="watch-the-error-disappear">Watch the error disappear</h3>
+<p>The paired test’s advantage is easiest to see by looking at the SAME dataset two ways. Every subject below has their own baseline; some people just score high and some score low. The left panel shows raw scores the way an independent test sees them: subject-to-subject spread swamps the condition effect. The right panel subtracts each subject’s own average, which is exactly what working with difference scores accomplishes. The spread collapses, and the effect that was invisible on the left becomes unmistakable.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| viewerHeight: 600
+#| standalone: true
+
+library(shiny)
+
+ui &lt;- fluidPage(
+  titlePanel("Watch the Error Disappear"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("n",       "Number of subjects", 5, 30, 12),
+      sliderInput("eff",     "True condition effect", 0, 5, 2, step = 0.25),
+      sliderInput("sd_subj", "Between-subject SD (baseline differences)", 0, 10, 5, step = 0.5),
+      sliderInput("sd_err",  "Within-subject error SD", 0.25, 3, 0.75, step = 0.25),
+      helpText("Same data, two views. The paired test works on the right panel.")
+    ),
+    mainPanel(
+      plotOutput("errPlot", height = "340px"),
+      uiOutput("errResults")
+    )
+  )
+)
+
+server &lt;- function(input, output) {
+
+  dat &lt;- reactive({
+    set.seed(110)
+    n &lt;- input$n
+    base &lt;- rnorm(n, 50, input$sd_subj)
+    c1 &lt;- base + rnorm(n, 0, input$sd_err)
+    c2 &lt;- base + input$eff + rnorm(n, 0, input$sd_err)
+    sm &lt;- (c1 + c2) / 2
+    list(c1 = c1, c2 = c2, cen1 = c1 - sm, cen2 = c2 - sm, n = n)
+  })
+
+  draw_panel &lt;- function(y1, y2, main, sub) {
+    n &lt;- length(y1)
+    ylim &lt;- range(c(y1, y2)) + c(-1, 1)
+    plot(NA, xlim = c(0.6, 2.4), ylim = ylim, xaxt = "n",
+         xlab = "Condition", ylab = "Score", main = main)
+    axis(1, at = 1:2, labels = c("C1", "C2"))
+    for (i in seq_len(n))
+      lines(1:2, c(y1[i], y2[i]), col = rgb(0, 0, 0.8, 0.25))
+    points(rep(1, n), y1, pch = 16, col = rgb(0.18, 0.53, 0.78, 0.6))
+    points(rep(2, n), y2, pch = 16, col = rgb(0.82, 0.24, 0.24, 0.6))
+    segments(0.85, mean(y1), 1.15, mean(y1), lwd = 4, col = "navy")
+    segments(1.85, mean(y2), 2.15, mean(y2), lwd = 4, col = "red3")
+    mtext(sub, side = 3, line = 0.2, cex = 0.8, col = "gray40")
+  }
+
+  output$errPlot &lt;- renderPlot({
+    d &lt;- dat()
+    par(mfrow = c(1, 2), mar = c(4, 4, 3.5, 1))
+    draw_panel(d$c1, d$c2, "Raw scores",
+               sprintf("independent view (overall SD = %.1f)", sd(c(d$c1, d$c2))))
+    draw_panel(d$cen1, d$cen2, "Subject-centered",
+               sprintf("paired view (overall SD = %.1f)", sd(c(d$cen1, d$cen2))))
+  })
+
+  output$errResults &lt;- renderUI({
+    d &lt;- dat()
+    ri &lt;- t.test(d$c2, d$c1, var.equal = TRUE)
+    rp &lt;- t.test(d$c2, d$c1, paired = TRUE)
+    tags$div(
+      style = "background:#f9f9f9; border-left:4px solid #2c7bb6; padding:10px 14px; margin-top:10px; border-radius:4px;",
+      tags$b("Same data, two tests:"), tags$br(),
+      sprintf("Independent: t(%.0f) = %.2f, p = %.4f", ri$parameter, ri$statistic, ri$p.value), tags$br(),
+      sprintf("Paired: t(%.0f) = %.2f, p = %.4f", rp$parameter, rp$statistic, rp$p.value), tags$br(),
+      tags$em("The independent test must treat all subject-to-subject spread as error. The paired test subtracts it away before testing.")
+    )
+  })
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
+<hr>
+</section>
 </section>
 </section>
 <section id="confidence-intervals-effect-sizes" class="level1">
@@ -965,7 +1061,7 @@ The link between a CI and a hypothesis test
 <p>A 95% confidence interval and a two-tailed test at α = 0.05 carry the same information. If the hypothesized value <span class="math inline">\(\mu_0\)</span> falls <strong>outside</strong> the interval, you would reject H₀. If it falls <strong>inside</strong>, you retain H₀. Watch the decision box flip as you slide <span class="math inline">\(\mu_0\)</span> across an interval edge.</p>
 </div>
 </div>
-<p><strong>Effect sizes</strong> answer “how big,” which significance alone never tells you. The sheet gives you three:</p>
+<p><strong>Effect sizes</strong> answer “how big,” which significance alone never tells you. The formula sheet gives you three:</p>
 <ul>
 <li><strong>Cohen’s d</strong> <span class="math inline">\(= \dfrac{\bar{x} - \mu_0}{s}\)</span>, in standard-deviation units (small 0.2, medium 0.5, large 0.8).</li>
 <li><strong>Proportion of variance</strong> <span class="math inline">\(r^2 = \dfrac{t^2}{t^2 + df}\)</span> (item 11), the share of variability explained.</li>
@@ -1075,6 +1171,23 @@ shinyApp(ui = ui, server = server)</code></pre>
 <section id="one-way-anova" class="level1">
 <h1>6. One-Way ANOVA</h1>
 <p>ANOVA (Analysis of Variance) tests whether <strong>the variance of 2 or more group means</strong> are equal. In practice, it’s usually used for <strong>3 or more groups</strong>, but it’s important to understand that you can use it for comparing two groups.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Why do we call it an analysis of VARIANCE if we care about the means?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why do we call it an analysis of VARIANCE if we care about the means?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Because the way you detect differences in means is by analyzing variance — specifically, by comparing two kinds of it.</p>
+<p>When group means differ, the data are spread out <em>between</em> groups more than you would expect by chance. ANOVA quantifies this by asking how much of the total variance is explained by group membership (between-groups variance) versus how much is just noise within each group (within-groups variance). The F-ratio is literally that comparison:</p>
+<p><span class="math display">\[F = \frac{\text{variance between groups}}{\text{variance within groups}}\]</span></p>
+<p>If the group means are all equal, those two quantities should be about the same, so F ≈ 1. If the means differ, the between-groups variance inflates and F grows.</p>
+<p>So “analysis of variance” is accurate: the test never checks <span class="math inline">\(\mu_1 = \mu_2 = \mu_3\)</span> directly. It infers a difference by decomposing and comparing variances. The means are what you care about; variance is the tool that gets you there.</p>
+</div>
+</div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Performing an ANOVA on only 2 groups">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1105,13 +1218,13 @@ The Null Hypothesis
 <p><span class="math display">\[H_0: \mu_1 = \mu_2 = \mu_3 = \dots = \mu_k\]</span></p>
 </div>
 </div>
-<p>If you get a significant <em>p</em>-value on these tests, you often will follow up with a post-hoc test to identify which of the groups has the difference.</p>
+<p>If you get a significant <em>p</em>-value, the ANOVA only tells you that <em>something</em> differs. Finding <em>which</em> groups differ takes a post-hoc test, and the logic behind those matters enough to get its own section: see <strong>Section 7</strong> right below.</p>
 <p>It partitions total variance into:</p>
 <ul>
 <li><strong>Between-groups (SS_B):</strong> variance due to group differences</li>
 <li><strong>Within-groups / Error (SS_W):</strong> variance within groups</li>
 </ul>
-<p>The <strong>F-statistic</strong> = MS_Between / MS_Within. Large F indicates that the <strong>means differ more than chance</strong>.</p>
+<p>The <strong>F-statistic</strong> = MS_Between / MS_Within. Large F indicates that the <strong>means differ more than chance</strong>. Importantly, the test never compares the means directly: it infers that they differ by comparing variances.</p>
 <p><span class="math display">\[F = \frac{MS_{Between}}{MS_{Within}} = \frac{SS_B / (k-1)}{SS_W / (N-k)}\]</span></p>
 <section id="a.-between-groups-anova" class="level2">
 <h2 class="anchored" data-anchor-id="a.-between-groups-anova">6a. Between-Groups ANOVA</h2>
@@ -1258,7 +1371,7 @@ The Null Hypothesis
 <p>where each <span class="math inline">\(\mu_i\)</span> represents the mean for the same subjects measured under condition <span class="math inline">\(i\)</span>.</p>
 </div>
 </div>
-<p>The same subjects are measured across all conditions. Subject-to-subject variability is <strong>removed</strong> from the error term, dramatically increasing statistical power.</p>
+<p>The same subjects are measured across all conditions. Subject-to-subject variability is <strong>removed</strong> from the error term, dramatically increasing statistical power. We do this by first calculating the mean difference WITHIN SUBJECT for each of the observations. This is how we had a data table that started out as 1000+ rows eventually turn into just 20 rows that we could perform our stats on in HW3; for each of the 4 conditions, we took the subject’s average response, then compared those 4 averages per person. The “Watch the error disappear” demo back in Section 4b shows this same trick with two conditions; the repeated-measures ANOVA simply extends it to more.</p>
 <p><span class="math display">\[F_{RM} = \frac{MS_{Conditions}}{MS_{Conditions \times Subjects}}\]</span></p>
 <p>The line plot below shows individual “subjects” across conditions. Parallel lines are good and indicate low within-subject error. This results in a high <em>F</em>.</p>
 <p>REMEMBER: While t-scores are universally accepted as having clearly delineated conventional effect thresholds (d = 0.2 | 0.5 | 0.8), <strong>F tests do not have common effect sizes</strong>. Depending on your dataset, explaining 25% of the variance could be excellent! However, if you’re looking at a cancer screening test, it is likely far too low.</p>
@@ -1398,10 +1511,98 @@ server &lt;- function(input, output) {
 
 shinyApp(ui = ui, server = server)
 </code></pre>
+<hr>
 </section>
+</section>
+<section id="post-hoc-tests-multiple-comparisons" class="level1">
+<h1>7. Post-Hoc Tests &amp; Multiple Comparisons</h1>
+<p>A significant ANOVA tells you <em>that</em> the group means are not all equal. It does not tell you <em>which</em> groups differ. For that we follow up with a <strong>post-hoc test</strong>. In this class we used <strong>Tukey’s Honestly Significant Difference (HSD)</strong>, which looks a lot like running a t-test on every pair of groups.</p>
+<p>The obvious question is why we need a special test instead of just running those t-tests ourselves. The answer comes down to making sure that you HONESTLY have a difference, and we do that by keeping track of how many total comparisons are being made. Every test you run carries its own chance of a false positive. If you do enough tests, eventually something is going to slip under that 5% line by accident. One test at p = 0.045 is fine. Ten tests, and your effective threshold should be MUCH lower, because each comparison brings its own chance of a fluke. With m comparisons, the chance of at least one false positive is approximately:</p>
+<p><span class="math display">\[P(\text{at least one false positive}) \approx 1 - (1 - \alpha)^m\]</span></p>
+<p>Four groups already mean 6 pairwise comparisons, which pushes the family-wise error rate past 26%. Tukey’s HSD accounts for the number of comparisons and holds the <em>overall</em> false-positive rate near 5%.</p>
+<p><strong>How to use this app:</strong> Every group here is drawn from the SAME population, so any “significant” pairwise difference is a false positive by construction. Add groups and watch how often plain t-tests find something that is not there, while Tukey stays honest.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| viewerHeight: 600
+#| standalone: true
+
+library(shiny)
+
+ui &lt;- fluidPage(
+  titlePanel("Multiple Comparisons: Why Post-Hoc Corrections Exist"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("k",    "Number of groups", 3, 8, 4),
+      sliderInput("n",    "n per group",      5, 20, 10),
+      sliderInput("nexp", "Simulated experiments", 20, 200, 100, step = 20),
+      helpText("All groups come from the SAME population. Anything 'significant' is a false positive.")
+    ),
+    mainPanel(
+      plotOutput("phPlot", height = "330px"),
+      uiOutput("phResults")
+    )
+  )
+)
+
+server &lt;- function(input, output) {
+
+  sim &lt;- reactive({
+    set.seed(110)
+    k &lt;- input$k; n &lt;- input$n; B &lt;- input$nexp
+    unc &lt;- 0; tuk &lt;- 0
+    for (b in seq_len(B)) {
+      g &lt;- factor(rep(seq_len(k), each = n))
+      x &lt;- rnorm(k * n, mean = 20, sd = 3)
+      pmat &lt;- pairwise.t.test(x, g, p.adjust.method = "none")$p.value
+      if (min(pmat, na.rm = TRUE) &lt; 0.05) unc &lt;- unc + 1
+      padj &lt;- TukeyHSD(aov(x ~ g))$g[, "p adj"]
+      if (min(padj) &lt; 0.05) tuk &lt;- tuk + 1
+    }
+    m &lt;- choose(k, 2)
+    list(m = m, fwer = 1 - 0.95^m, unc = unc / B, tuk = tuk / B, B = B)
+  })
+
+  output$phPlot &lt;- renderPlot({
+    s &lt;- sim()
+    par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+    ms &lt;- 1:28
+    plot(ms, 1 - 0.95^ms, type = "l", lwd = 2.5, col = "navy",
+         xlab = "Number of comparisons (m)",
+         ylab = "P(at least one false positive)",
+         main = "False positives pile up", ylim = c(0, 1))
+    abline(h = 0.05, col = "gray50", lty = 3)
+    points(s$m, s$fwer, pch = 19, col = "tomato", cex = 1.8)
+    text(s$m, min(s$fwer + 0.1, 0.97), sprintf("m = %d", s$m), col = "tomato")
+
+    bp &lt;- barplot(c(Uncorrected = s$unc, "Tukey HSD" = s$tuk),
+            col = c("tomato", "seagreen"), border = "white",
+            ylim = c(0, max(0.5, s$unc + 0.12)),
+            main = sprintf("Fooled in %d null experiments", s$B),
+            ylab = "Proportion with a false positive")
+    abline(h = 0.05, col = "gray30", lty = 2, lwd = 2)
+    text(bp, c(s$unc, s$tuk) + 0.04, sprintf("%.0f%%", 100 * c(s$unc, s$tuk)))
+  })
+
+  output$phResults &lt;- renderUI({
+    s &lt;- sim()
+    tags$div(
+      style = "background:#f9f9f9; border-left:4px solid #2c7bb6; padding:10px 14px; margin-top:10px; border-radius:4px;",
+      sprintf("%d groups means %d pairwise comparisons.", input$k, s$m), tags$br(),
+      sprintf("Theoretical chance of at least one fluke at α = .05: about %.0f%%.", 100 * s$fwer), tags$br(),
+      sprintf("Simulated: plain t-tests got fooled in %.0f%% of experiments; Tukey HSD in %.0f%%.",
+              100 * s$unc, 100 * s$tuk), tags$br(),
+      tags$em("Tukey gives up a little power in exchange for keeping the overall error rate near 5%.")
+    )
+  })
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
+<hr>
 </section>
 <section id="two-way-anova" class="level1">
-<h1>7. Two-Way ANOVA</h1>
+<h1>8. Two-Way ANOVA</h1>
 <p>A <strong>two-way between-subjects ANOVA</strong> has two factors (call them A and B), with different subjects in every cell. Instead of one question it asks three, so it runs three hypothesis tests:</p>
 <ul>
 <li><strong>Main effect of A:</strong> averaging over B, do the levels of A differ?</li>
@@ -1544,8 +1745,8 @@ shinyApp(ui = ui, server = server)</code></pre>
 <hr>
 </section>
 <section id="correlation-pearsons-r" class="level1">
-<h1>8. Correlation (Pearson’s r)</h1>
-<p><strong>Correlation</strong> describes the strength and direction of the linear relationship between two continuous variables. Pearson’s <em>r</em> runs from −1 to +1: the sign is the direction, and the distance from 0 is the strength.</p>
+<h1>9. Correlation (Pearson’s r)</h1>
+<p><strong>Correlation</strong> describes the strength and direction of the linear relationship between two continuous variables. Pearson’s <em>r</em> runs from −1 to +1: the sign is the direction, and the distance from 0 is the strength. A perfect correlation of 1 means every point sits exactly on a straight line: each 1 SD increase in X comes with exactly 1 SD increase in Y. Careful, though: r says nothing about the raw-unit slope. A perfect r can belong to a steep line or a shallow one; the slope is the regression line’s job (Section 10).</p>
 <p><span class="math display">\[r = \frac{SS_{XY}}{\sqrt{SS_X \, SS_Y}}, \qquad r^2 = \text{proportion of variance shared}\]</span></p>
 <p>On the exam you may be handed the sums of squares and asked for <em>r</em> and the effect size. With <span class="math inline">\(SS_{XY}\)</span> and the product <span class="math inline">\(SS_X \cdot SS_Y\)</span> in hand, <em>r</em> is one division and a square root, and <span class="math inline">\(r^2\)</span> is just <em>r</em> squared (item 25, then the coefficient of determination).</p>
 <div class="callout callout-style-default callout-important callout-titled" title="Significance depends on n, not just the size of r">
@@ -1671,7 +1872,7 @@ shinyApp(ui = ui, server = server)</code></pre>
 <hr>
 </section>
 <section id="linear-regression" class="level1">
-<h1>9. Linear Regression</h1>
+<h1>10. Linear Regression</h1>
 <p>Correlation describes a relationship; <strong>linear regression</strong> fits an equation to it so you can predict one variable from another.</p>
 <p><span class="math display">\[\hat{Y} = bX + a\]</span></p>
 <p>The <strong>predictor</strong> X is the known variable; the <strong>criterion</strong> Y is the one you predict. The slope <em>b</em> is the change in Y for a one-unit change in X (item 27). The intercept <em>a</em> is the predicted Y when X = 0. The line is chosen by <strong>least squares</strong>, the line that makes the squared vertical distances from the points (the <strong>residuals</strong>) as small as possible.</p>
@@ -1793,13 +1994,73 @@ shinyApp(ui = ui, server = server)</code></pre>
 <hr>
 </section>
 <section id="chi-square" class="level1">
-<h1>10. Chi-Square</h1>
+<h1>11. Chi-Square</h1>
 <p>Chi-square is for <strong>counts in categories</strong>, not means. It compares the frequencies you observed against the frequencies you would expect. There are two versions, and the exam wants you to name which one.</p>
 <p><span class="math display">\[f_e = \frac{\text{row total} \times \text{column total}}{N}, \qquad \chi^2 = \sum \frac{(f_o - f_e)^2}{f_e}\]</span></p>
 <ul>
 <li><strong>Goodness of fit:</strong> one categorical variable against a hypothesized distribution. <span class="math inline">\(df = k - 1\)</span>, where <em>k</em> is the number of categories.</li>
 <li><strong>Test of independence:</strong> two categorical variables, testing whether they are associated. <span class="math inline">\(df = (\text{rows} - 1)(\text{columns} - 1)\)</span>.</li>
 </ul>
+<div class="callout callout-style-default callout-note callout-titled" title="The two chi-squares, side by side">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The two chi-squares, side by side
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Both flavors use the exact same statistic. What changes is the question, and where the expected frequencies come from.</p>
+<table class="table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Goodness of fit</th>
+<th>Test of independence</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Variables</td>
+<td>one categorical variable</td>
+<td>two categorical variables</td>
+</tr>
+<tr class="even">
+<td>Question</td>
+<td>does the observed distribution match a claimed one?</td>
+<td>are the two variables associated?</td>
+</tr>
+<tr class="odd">
+<td>H₀</td>
+<td>observed frequencies match the expected distribution</td>
+<td>the variables are independent</td>
+</tr>
+<tr class="even">
+<td>Expected frequencies</td>
+<td>from the hypothesized proportions (equal or not)</td>
+<td>row total × column total / N</td>
+</tr>
+<tr class="odd">
+<td>df</td>
+<td>k − 1</td>
+<td>(rows − 1)(columns − 1)</td>
+</tr>
+<tr class="even">
+<td>Feels like</td>
+<td>a one-sample test for categories</td>
+<td>a correlation for categories</td>
+</tr>
+</tbody>
+</table>
+<p>Two wording cues on the exam: “matches / differs from an expected or claimed distribution” points to goodness of fit, while “related to / associated with / depends on” points to independence. One more quirk worth remembering: goodness of fit is the rare test where <em>retaining</em> the null can be the interesting result, like confirming a die is fair.</p>
+</div>
+</div>
 <div class="callout callout-style-default callout-important callout-titled" title="Assumptions, including the soft one">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1949,8 +2210,10 @@ server &lt;- function(input, output) {
 }
 
 shinyApp(ui = ui, server = server)</code></pre>
+<p>And that’s everything you need for the final! You’ve covered a lot of material in the past few months, and I’ve been very impressed at how the visualizations and interpretations of data have improved overall for each homework.</p>
+<p>You got this!</p>
 <hr>
-<p>NOTE: Please email me (benjamin.e.graul.gr@dartmouth.edu) if you find any errors in this tool!</p>
+<p>NOTE: Please email me (benjamin.e.graul.gr@dartmouth.edu) if you find any errors in this tool! Visualizations created and text formatted with the assistance of Claude Code Opus 4.6-4.8.</p>
 </section>
 
 </main>

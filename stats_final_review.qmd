@@ -4,6 +4,7 @@ subtitle: "PSYC 10 -- Spring 2026"
 author:
   - name: "Ben Graul"
     affiliation: "Department of Psychological and Brain Sciences, Dartmouth College"
+    instructor: "Samantha Wray"
 date: today
 format:
   html:
@@ -18,9 +19,11 @@ filters:
   - shinylive
 ---
 
-This notebook extends the midterm review with every test you are responsible for on the final. The CLT, z-test, one- and two-sample *t*-test, and one-way ANOVA sections are carried over from the midterm tool. The new material is confidence intervals and effect sizes (Section 5), two-way ANOVA (Section 7), correlation (Section 8), linear regression (Section 9), and chi-square (Section 10).
+This notebook extends the midterm review with every test you are responsible for on the final. The CLT, z-test, one- and two-sample *t*-test, and one-way ANOVA sections are carried over from the midterm tool. The new material is confidence intervals and effect sizes (Section 5), post-hoc tests (Section 7), two-way ANOVA (Section 8), correlation (Section 9), linear regression (Section 10), and chi-square (Section 11).
 
 Playing with data is one of the best ways to build intuition for **what is going on inside** each test. When I first learned these, the formulas felt arbitrary until I could watch one slider move the whole picture. That is what this tool is for.
+
+DISCLAIMER: I haven't seen the final, but this is built from seeing the practice final.
 
 ::: {.callout-tip title="If I were studying for the final..."}
 Here is what I would do with this tool:
@@ -36,7 +39,7 @@ Here is what I would do with this tool:
 
 More points on this final come from picking the correct test than from any single calculation. The questions usually end with "be as specific as possible," so a vague answer like "a t-test" or "ANOVA" will lose points. Name the full test, including between- vs within-subjects and one- vs two-way.
 
-Work down from your outcome variable.
+Work down from your outcome variable. You'll probably have to zoom in- I've taken a bit to try and reformat it but it's not worth the headache for something that's rendering live. 
 
 ```{mermaid}
 flowchart TD
@@ -99,7 +102,7 @@ Nominal and ordinal data are usually counts, which points you toward chi-square.
 :::
 
 ::: {.callout-tip title="One-tailed or two-tailed?"}
-The mean-based and relationship tests can be run one- or two-tailed: z-test, one-sample t, two-sample t, Pearson correlation, and linear regression. Chi-square is non-directional by construction, so it is not described as one- or two-tailed.
+The mean-based and relationship tests can be run one- or two-tailed: z-test, one-sample t, two-sample t, Pearson correlation, and linear regression. Chi-square is non-directional by construction, so it is not described as one- or two-tailed- you can think of it as functionally two-tailed if that helps.
 :::
 
 ---
@@ -116,11 +119,15 @@ Key takeaways
 
 The tendency for our samples to create this type of normal distribution is what enables most of our other statistical tests. 
 
+::: {.callout-important title="Why should I care about the Central Limit Theorem?"}
+EVERY parametric test (i.e. everything except chi-square right now) depends on an assumption that there is a "correct" answer to your question, and that if you ask enough people, you will be able to guess or approximate the real answer. That's why we care about "population" metrics compared to "sample" metrics. We eventually need to assume that our observations are close enough to match the truth because we sampled enough people for each group of our test.  
+:::
+
 **How to use this app:** Choose a population shape, set the sample size (*n*), then drag the "Number of samples" slider slowly from left to right to watch the sampling distribution build up. Try setting your sample size to 1, 10, and 100. Do you see much of a difference beyond that?
 
 Notable milestones for a normally-distributed dataset: **1 sample** (almost nothing), **10 samples** (rough shape), **100 samples** (clearly bell-shaped), **300 samples** (well-converged).
 
-However, note how the sample size changes how quickly the correct mean is estimated. 
+However, note how the sample size changes how quickly the correct mean is estimated. If we only take one measurement but include 100 people, we get pretty close to the correct answer. 
 
 ```{shinylive-r}
 #| viewerHeight: 550
@@ -724,6 +731,89 @@ server <- function(input, output) {
 
 shinyApp(ui = ui, server = server)
 ```
+
+### Watch the error disappear
+
+The paired test's advantage is easiest to see by looking at the SAME dataset two ways. Every subject below has their own baseline; some people just score high and some score low. The left panel shows raw scores the way an independent test sees them: subject-to-subject spread swamps the condition effect. The right panel subtracts each subject's own average, which is exactly what working with difference scores accomplishes. The spread collapses, and the effect that was invisible on the left becomes unmistakable.
+
+```{shinylive-r}
+#| viewerHeight: 600
+#| standalone: true
+
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel("Watch the Error Disappear"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("n",       "Number of subjects", 5, 30, 12),
+      sliderInput("eff",     "True condition effect", 0, 5, 2, step = 0.25),
+      sliderInput("sd_subj", "Between-subject SD (baseline differences)", 0, 10, 5, step = 0.5),
+      sliderInput("sd_err",  "Within-subject error SD", 0.25, 3, 0.75, step = 0.25),
+      helpText("Same data, two views. The paired test works on the right panel.")
+    ),
+    mainPanel(
+      plotOutput("errPlot", height = "340px"),
+      uiOutput("errResults")
+    )
+  )
+)
+
+server <- function(input, output) {
+
+  dat <- reactive({
+    set.seed(110)
+    n <- input$n
+    base <- rnorm(n, 50, input$sd_subj)
+    c1 <- base + rnorm(n, 0, input$sd_err)
+    c2 <- base + input$eff + rnorm(n, 0, input$sd_err)
+    sm <- (c1 + c2) / 2
+    list(c1 = c1, c2 = c2, cen1 = c1 - sm, cen2 = c2 - sm, n = n)
+  })
+
+  draw_panel <- function(y1, y2, main, sub) {
+    n <- length(y1)
+    ylim <- range(c(y1, y2)) + c(-1, 1)
+    plot(NA, xlim = c(0.6, 2.4), ylim = ylim, xaxt = "n",
+         xlab = "Condition", ylab = "Score", main = main)
+    axis(1, at = 1:2, labels = c("C1", "C2"))
+    for (i in seq_len(n))
+      lines(1:2, c(y1[i], y2[i]), col = rgb(0, 0, 0.8, 0.25))
+    points(rep(1, n), y1, pch = 16, col = rgb(0.18, 0.53, 0.78, 0.6))
+    points(rep(2, n), y2, pch = 16, col = rgb(0.82, 0.24, 0.24, 0.6))
+    segments(0.85, mean(y1), 1.15, mean(y1), lwd = 4, col = "navy")
+    segments(1.85, mean(y2), 2.15, mean(y2), lwd = 4, col = "red3")
+    mtext(sub, side = 3, line = 0.2, cex = 0.8, col = "gray40")
+  }
+
+  output$errPlot <- renderPlot({
+    d <- dat()
+    par(mfrow = c(1, 2), mar = c(4, 4, 3.5, 1))
+    draw_panel(d$c1, d$c2, "Raw scores",
+               sprintf("independent view (overall SD = %.1f)", sd(c(d$c1, d$c2))))
+    draw_panel(d$cen1, d$cen2, "Subject-centered",
+               sprintf("paired view (overall SD = %.1f)", sd(c(d$cen1, d$cen2))))
+  })
+
+  output$errResults <- renderUI({
+    d <- dat()
+    ri <- t.test(d$c2, d$c1, var.equal = TRUE)
+    rp <- t.test(d$c2, d$c1, paired = TRUE)
+    tags$div(
+      style = "background:#f9f9f9; border-left:4px solid #2c7bb6; padding:10px 14px; margin-top:10px; border-radius:4px;",
+      tags$b("Same data, two tests:"), tags$br(),
+      sprintf("Independent: t(%.0f) = %.2f, p = %.4f", ri$parameter, ri$statistic, ri$p.value), tags$br(),
+      sprintf("Paired: t(%.0f) = %.2f, p = %.4f", rp$parameter, rp$statistic, rp$p.value), tags$br(),
+      tags$em("The independent test must treat all subject-to-subject spread as error. The paired test subtracts it away before testing.")
+    )
+  })
+}
+
+shinyApp(ui = ui, server = server)
+```
+
+---
+
 # 5. Confidence Intervals & Effect Sizes
 
 Hypothesis testing gives you a yes/no decision. **Estimation** asks a different question: what range of values is plausible for the parameter? A **confidence interval** sets an upper and lower limit that, across repeated samples, contains the population value a set percentage of the time.
@@ -734,7 +824,7 @@ $$\text{CI} = \bar{x} \pm t(s_{\bar{x}}), \quad s_{\bar{x}} = \frac{s}{\sqrt{n}}
 A 95% confidence interval and a two-tailed test at α = 0.05 carry the same information. If the hypothesized value $\mu_0$ falls **outside** the interval, you would reject H₀. If it falls **inside**, you retain H₀. Watch the decision box flip as you slide $\mu_0$ across an interval edge.
 :::
 
-**Effect sizes** answer "how big," which significance alone never tells you. The sheet gives you three:
+**Effect sizes** answer "how big," which significance alone never tells you. The formula sheet gives you three:
 
 - **Cohen's d** $= \dfrac{\bar{x} - \mu_0}{s}$, in standard-deviation units (small 0.2, medium 0.5, large 0.8).
 - **Proportion of variance** $r^2 = \dfrac{t^2}{t^2 + df}$ (item 11), the share of variability explained.
@@ -846,6 +936,19 @@ shinyApp(ui = ui, server = server)
 
 ANOVA (Analysis of Variance) tests whether **the variance of 2 or more group means** are equal. In practice, it's usually used for **3 or more groups**, but it's important to understand that you can use it for comparing two groups.
 
+::: {.callout-note title="Why do we call it an analysis of VARIANCE if we care about the means?"}
+Because the way you detect differences in means is by analyzing variance — specifically, by comparing two kinds of it.
+
+When group means differ, the data are spread out *between* groups more than you would expect by chance. ANOVA quantifies this by asking how much of the total variance is explained by group membership (between-groups variance) versus how much is just noise within each group (within-groups variance). The F-ratio is literally that comparison:
+
+$$F = \frac{\text{variance between groups}}{\text{variance within groups}}$$
+
+If the group means are all equal, those two quantities should be about the same, so F ≈ 1. If the means differ, the between-groups variance inflates and F grows.
+
+So "analysis of variance" is accurate: the test never checks $\mu_1 = \mu_2 = \mu_3$ directly. It infers a difference by decomposing and comparing variances. The means are what you care about; variance is the tool that gets you there.
+:::
+
+
 ::: {.callout-tip title="Performing an ANOVA on only 2 groups"}
 One-way ANOVA on two groups actually gives you the **same p-value as a pooled two-sample t-test!**
 
@@ -862,14 +965,15 @@ There is no difference between any of the group means:
 $$H_0: \mu_1 = \mu_2 = \mu_3 = \dots = \mu_k$$
 :::
 
-If you get a significant *p*-value on these tests, you often will follow up with a post-hoc test to identify which of the groups has the difference. 
+ 
+If you get a significant *p*-value, the ANOVA only tells you that *something* differs. Finding *which* groups differ takes a post-hoc test, and the logic behind those matters enough to get its own section: see **Section 7** right below.
 
 It partitions total variance into:
 
 - **Between-groups (SS_B):** variance due to group differences
 - **Within-groups / Error (SS_W):** variance within groups
 
-The **F-statistic** = MS_Between / MS_Within. Large F indicates that the **means differ more than chance**.
+The **F-statistic** = MS_Between / MS_Within. Large F indicates that the **means differ more than chance**. Importantly, the test never compares the means directly: it infers that they differ by comparing variances.
 
 $$F = \frac{MS_{Between}}{MS_{Within}} = \frac{SS_B / (k-1)}{SS_W / (N-k)}$$
 
@@ -1012,7 +1116,7 @@ $$H_0: \mu_1 = \mu_2 = \dots = \mu_k$$
 where each $\mu_i$ represents the mean for the same subjects measured under condition $i$.
 :::
 
-The same subjects are measured across all conditions. Subject-to-subject variability is **removed** from the error term, dramatically increasing statistical power.
+The same subjects are measured across all conditions. Subject-to-subject variability is **removed** from the error term, dramatically increasing statistical power. We do this by first calculating the mean difference WITHIN SUBJECT for each of the observations. This is how we had a data table that started out as 1000+ rows eventually turn into just 20 rows that we could perform our stats on in HW3; for each of the 4 conditions, we took the subject's average response, then compared those 4 averages per person. The "Watch the error disappear" demo back in Section 4b shows this same trick with two conditions; the repeated-measures ANOVA simply extends it to more.
 
 $$F_{RM} = \frac{MS_{Conditions}}{MS_{Conditions \times Subjects}}$$
 
@@ -1155,7 +1259,102 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 
 ```
-# 7. Two-Way ANOVA
+
+---
+
+# 7. Post-Hoc Tests & Multiple Comparisons
+
+A significant ANOVA tells you *that* the group means are not all equal. It does not tell you *which* groups differ. For that we follow up with a **post-hoc test**. In this class we used **Tukey's Honestly Significant Difference (HSD)**, which looks a lot like running a t-test on every pair of groups.
+
+The obvious question is why we need a special test instead of just running those t-tests ourselves. The answer comes down to making sure that you HONESTLY have a difference, and we do that by keeping track of how many total comparisons are being made. Every test you run carries its own chance of a false positive. If you do enough tests, eventually something is going to slip under that 5% line by accident. One test at p = 0.045 is fine. Ten tests, and your effective threshold should be MUCH lower, because each comparison brings its own chance of a fluke. With m comparisons, the chance of at least one false positive is approximately:
+
+$$P(\text{at least one false positive}) \approx 1 - (1 - \alpha)^m$$
+
+Four groups already mean 6 pairwise comparisons, which pushes the family-wise error rate past 26%. Tukey's HSD accounts for the number of comparisons and holds the *overall* false-positive rate near 5%.
+
+**How to use this app:** Every group here is drawn from the SAME population, so any "significant" pairwise difference is a false positive by construction. Add groups and watch how often plain t-tests find something that is not there, while Tukey stays honest.
+
+```{shinylive-r}
+#| viewerHeight: 600
+#| standalone: true
+
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel("Multiple Comparisons: Why Post-Hoc Corrections Exist"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("k",    "Number of groups", 3, 8, 4),
+      sliderInput("n",    "n per group",      5, 20, 10),
+      sliderInput("nexp", "Simulated experiments", 20, 200, 100, step = 20),
+      helpText("All groups come from the SAME population. Anything 'significant' is a false positive.")
+    ),
+    mainPanel(
+      plotOutput("phPlot", height = "330px"),
+      uiOutput("phResults")
+    )
+  )
+)
+
+server <- function(input, output) {
+
+  sim <- reactive({
+    set.seed(110)
+    k <- input$k; n <- input$n; B <- input$nexp
+    unc <- 0; tuk <- 0
+    for (b in seq_len(B)) {
+      g <- factor(rep(seq_len(k), each = n))
+      x <- rnorm(k * n, mean = 20, sd = 3)
+      pmat <- pairwise.t.test(x, g, p.adjust.method = "none")$p.value
+      if (min(pmat, na.rm = TRUE) < 0.05) unc <- unc + 1
+      padj <- TukeyHSD(aov(x ~ g))$g[, "p adj"]
+      if (min(padj) < 0.05) tuk <- tuk + 1
+    }
+    m <- choose(k, 2)
+    list(m = m, fwer = 1 - 0.95^m, unc = unc / B, tuk = tuk / B, B = B)
+  })
+
+  output$phPlot <- renderPlot({
+    s <- sim()
+    par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+    ms <- 1:28
+    plot(ms, 1 - 0.95^ms, type = "l", lwd = 2.5, col = "navy",
+         xlab = "Number of comparisons (m)",
+         ylab = "P(at least one false positive)",
+         main = "False positives pile up", ylim = c(0, 1))
+    abline(h = 0.05, col = "gray50", lty = 3)
+    points(s$m, s$fwer, pch = 19, col = "tomato", cex = 1.8)
+    text(s$m, min(s$fwer + 0.1, 0.97), sprintf("m = %d", s$m), col = "tomato")
+
+    bp <- barplot(c(Uncorrected = s$unc, "Tukey HSD" = s$tuk),
+            col = c("tomato", "seagreen"), border = "white",
+            ylim = c(0, max(0.5, s$unc + 0.12)),
+            main = sprintf("Fooled in %d null experiments", s$B),
+            ylab = "Proportion with a false positive")
+    abline(h = 0.05, col = "gray30", lty = 2, lwd = 2)
+    text(bp, c(s$unc, s$tuk) + 0.04, sprintf("%.0f%%", 100 * c(s$unc, s$tuk)))
+  })
+
+  output$phResults <- renderUI({
+    s <- sim()
+    tags$div(
+      style = "background:#f9f9f9; border-left:4px solid #2c7bb6; padding:10px 14px; margin-top:10px; border-radius:4px;",
+      sprintf("%d groups means %d pairwise comparisons.", input$k, s$m), tags$br(),
+      sprintf("Theoretical chance of at least one fluke at α = .05: about %.0f%%.", 100 * s$fwer), tags$br(),
+      sprintf("Simulated: plain t-tests got fooled in %.0f%% of experiments; Tukey HSD in %.0f%%.",
+              100 * s$unc, 100 * s$tuk), tags$br(),
+      tags$em("Tukey gives up a little power in exchange for keeping the overall error rate near 5%.")
+    )
+  })
+}
+
+shinyApp(ui = ui, server = server)
+```
+
+---
+
+# 8. Two-Way ANOVA
 
 A **two-way between-subjects ANOVA** has two factors (call them A and B), with different subjects in every cell. Instead of one question it asks three, so it runs three hypothesis tests:
 
@@ -1281,9 +1480,9 @@ shinyApp(ui = ui, server = server)
 
 ---
 
-# 8. Correlation (Pearson's r)
+# 9. Correlation (Pearson's r)
 
-**Correlation** describes the strength and direction of the linear relationship between two continuous variables. Pearson's *r* runs from −1 to +1: the sign is the direction, and the distance from 0 is the strength.
+**Correlation** describes the strength and direction of the linear relationship between two continuous variables. Pearson's *r* runs from −1 to +1: the sign is the direction, and the distance from 0 is the strength. A perfect correlation of 1 means every point sits exactly on a straight line: each 1 SD increase in X comes with exactly 1 SD increase in Y. Careful, though: r says nothing about the raw-unit slope. A perfect r can belong to a steep line or a shallow one; the slope is the regression line's job (Section 10).
 
 $$r = \frac{SS_{XY}}{\sqrt{SS_X \, SS_Y}}, \qquad r^2 = \text{proportion of variance shared}$$
 
@@ -1392,7 +1591,7 @@ shinyApp(ui = ui, server = server)
 
 ---
 
-# 9. Linear Regression
+# 10. Linear Regression
 
 Correlation describes a relationship; **linear regression** fits an equation to it so you can predict one variable from another.
 
@@ -1500,7 +1699,7 @@ shinyApp(ui = ui, server = server)
 
 ---
 
-# 10. Chi-Square
+# 11. Chi-Square
 
 Chi-square is for **counts in categories**, not means. It compares the frequencies you observed against the frequencies you would expect. There are two versions, and the exam wants you to name which one.
 
@@ -1508,6 +1707,21 @@ $$f_e = \frac{\text{row total} \times \text{column total}}{N}, \qquad \chi^2 = \
 
 - **Goodness of fit:** one categorical variable against a hypothesized distribution. $df = k - 1$, where *k* is the number of categories.
 - **Test of independence:** two categorical variables, testing whether they are associated. $df = (\text{rows} - 1)(\text{columns} - 1)$.
+
+::: {.callout-note title="The two chi-squares, side by side"}
+Both flavors use the exact same statistic. What changes is the question, and where the expected frequencies come from.
+
+| | Goodness of fit | Test of independence |
+|---|---|---|
+| Variables | one categorical variable | two categorical variables |
+| Question | does the observed distribution match a claimed one? | are the two variables associated? |
+| H₀ | observed frequencies match the expected distribution | the variables are independent |
+| Expected frequencies | from the hypothesized proportions (equal or not) | row total × column total / N |
+| df | k − 1 | (rows − 1)(columns − 1) |
+| Feels like | a one-sample test for categories | a correlation for categories |
+
+Two wording cues on the exam: "matches / differs from an expected or claimed distribution" points to goodness of fit, while "related to / associated with / depends on" points to independence. One more quirk worth remembering: goodness of fit is the rare test where *retaining* the null can be the interesting result, like confirming a die is fair.
+:::
 
 ::: {.callout-important title="Assumptions, including the soft one"}
 - Each observation falls in **one and only one** category.
@@ -1639,6 +1853,12 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 ```
 
+
+And that's everything you need for the final! You've covered a lot of material in the past few months, and I've been very impressed at how the  visualizations and interpretations of data have improved overall for each homework.
+
+You got this! 
+
 ---
 
 NOTE: Please email me (benjamin.e.graul.gr@dartmouth.edu) if you find any errors in this tool!
+Visualizations created and text formatted with the assistance of Claude Code Opus 4.6-4.8. 
