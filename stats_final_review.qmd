@@ -4,13 +4,13 @@ subtitle: "PSYC 10 -- Spring 2026"
 author:
   - name: "Ben Graul"
     affiliation: "Department of Psychological and Brain Sciences, Dartmouth College"
-    instructor: "Samantha Wray"
 date: today
 format:
   html:
     embed-resources: false
     self-contained: false
     theme: flatly
+    page-layout: full
     toc: true
     toc-depth: 2
     toc-location: left
@@ -19,11 +19,13 @@ filters:
   - shinylive
 ---
 
+::: {.callout-important title="Why isn't anything loading?"}
+When you first load this, your broswer starts multiple R instances. I imagine there's a way to optimize that, but for now, wait a minute or two while the interactive parts load. If it doesn't load for you after waiting a few minutes, please shoot me an email so I can look into it. 
+:::
+
 This notebook extends the midterm review with every test you are responsible for on the final. The CLT, z-test, one- and two-sample *t*-test, and one-way ANOVA sections are carried over from the midterm tool. The new material is confidence intervals and effect sizes (Section 5), post-hoc tests (Section 7), two-way ANOVA (Section 8), correlation (Section 9), linear regression (Section 10), and chi-square (Section 11).
 
 Playing with data is one of the best ways to build intuition for **what is going on inside** each test. When I first learned these, the formulas felt arbitrary until I could watch one slider move the whole picture. That is what this tool is for.
-
-DISCLAIMER: I haven't seen the final, but this is built from seeing the practice final.
 
 ::: {.callout-tip title="If I were studying for the final..."}
 Here is what I would do with this tool:
@@ -39,7 +41,7 @@ Here is what I would do with this tool:
 
 More points on this final come from picking the correct test than from any single calculation. The questions usually end with "be as specific as possible," so a vague answer like "a t-test" or "ANOVA" will lose points. Name the full test, including between- vs within-subjects and one- vs two-way.
 
-Work down from your outcome variable. You'll probably have to zoom in- I've taken a bit to try and reformat it but it's not worth the headache for something that's rendering live. 
+Work down from your outcome variable.
 
 ```{mermaid}
 flowchart TD
@@ -965,7 +967,7 @@ There is no difference between any of the group means:
 $$H_0: \mu_1 = \mu_2 = \mu_3 = \dots = \mu_k$$
 :::
 
- 
+
 If you get a significant *p*-value, the ANOVA only tells you that *something* differs. Finding *which* groups differ takes a post-hoc test, and the logic behind those matters enough to get its own section: see **Section 7** right below.
 
 It partitions total variance into:
@@ -1853,12 +1855,6 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 ```
 
-
-And that's everything you need for the final! You've covered a lot of material in the past few months, and I've been very impressed at how the  visualizations and interpretations of data have improved overall for each homework.
-
-You got this! 
-
 ---
 
 NOTE: Please email me (benjamin.e.graul.gr@dartmouth.edu) if you find any errors in this tool!
-Visualizations created and text formatted with the assistance of Claude Code Opus 4.6-4.8. 

@@ -1,0 +1,475 @@
+---
+title: "The Shoe Price Gouging Hypothesis"
+subtitle: "How a tracking cookie might be picking your wallet"
+author: Ben Graul
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: show
+    theme: cosmo
+    fig-width: 8
+    fig-height: 5
+execute:
+  warning: false
+  message: false
+---
+
+## The Setup
+
+You're shopping for shoes online. The site has decided you're female. You start
+to wonder whether your friend on his own laptop sees the same prices. That is
+the **Shoe Price Gouging Hypothesis** in plain English: the store reads your
+tracking cookie and quietly nudges prices around based on who it thinks you are.
+
+We're going to investigate using exactly what we covered in class:
+independent-samples *t*-tests, one-sample *z*-tests, paired *t*-tests, and
+**one-way ANOVA**. Plots throughout, so you can see what the numbers are doing.
+
+A heads-up about the figures: every plot shows 95% confidence intervals on the
+means. Bring questions about what those intervals actually mean to office hours. 
+The short version for now: wider interval, less certainty about where
+the true mean sits.
+
+## The Data
+
+We collected prices under two conditions. First with the cookie identifying us
+as female, then again after clearing cookies and letting the site assume male.
+
+```{r setup}
+library(tidyverse)
+library(ggsignif)
+
+# Population parameters from the full inventory
+mu_men      <- 86.74
+sigma_men   <- 13.86
+mu_women    <- 95.70
+sigma_women <- 16.13
+
+shoe_data <- tribble(
+  ~shoe,     ~cookie, ~size,    ~mean,  ~sd,    ~n,
+  "Men's",   "F",     "Small",  103.80, 10.59,  5,
+  "Men's",   "F",     "Large",  88.14,  14.75,  100,
+  "Men's",   "M",     "Small",  79.37,  8.28,   5,
+  "Men's",   "M",     "Large",  84.73,  14.13,  100,
+  "Women's", "F",     "Small",  102.85, 29.80,  5,
+  "Women's", "F",     "Large",  95.93,  16.52,  100,
+  "Women's", "M",     "Small",  62.32,  1.58,   5,
+  "Women's", "M",     "Large",  95.52,  15.80,  100
+) |>
+  mutate(
+    se    = sd / sqrt(n),
+    ci_lo = mean - qt(0.975, n - 1) * se,
+    ci_hi = mean + qt(0.975, n - 1) * se
+  )
+
+shoe_data
+```
+
+Quick read on the populations: men's shoes really do average about \$87, women's
+shoes really do average about \$96, and that gap of roughly \$9 is the truth
+we're trying to recover from samples.
+
+## Round 1: Independent-Samples *t*-Tests (Cookie = F)
+
+### Test 1: Five Shoes Each
+
+We grabbed five men's shoes and five women's shoes. Equal variances assumed,
+since that's what we covered.
+
+```{r small-t}
+two_sample_t <- function(M1, SD1, n1, M2, SD2, n2) {
+  pooled_var <- ((n1 - 1) * SD1^2 + (n2 - 1) * SD2^2) / (n1 + n2 - 2)
+  pooled_sd  <- sqrt(pooled_var)
+  se         <- pooled_sd * sqrt(1/n1 + 1/n2)
+  t_stat     <- (M1 - M2) / se
+  df         <- n1 + n2 - 2
+  p_val      <- 2 * (1 - pt(abs(t_stat), df))
+  tibble(t = t_stat, df = df, p = p_val,
+         pooled_sd = pooled_sd, se = se)
+}
+
+test_small <- two_sample_t(103.80, 10.59, 5, 102.85, 29.80, 5)
+test_small
+```
+
+`t(8) = 0.07, p = .948.`
+
+That \$29.80 standard deviation on the women's side is doing the work here.
+With five shoes and that much spread, the test has nothing to grab onto.
+
+### Test 2: 100 Shoes Each
+
+Same store, same cookie, just more shoes.
+
+```{r large-t}
+test_large <- two_sample_t(88.14, 14.75, 100, 95.93, 16.52, 100)
+test_large
+```
+
+`t(198) = -3.52, p < .001.`
+
+There it is. Women's shoes really do cost about \$8 more on average. The effect
+was always there. Five shoes just couldn't see it.
+
+### Visualizing the Power Problem
+
+```{r power-plot, fig.height=5.5}
+plot_round1 <- shoe_data |>
+  filter(cookie == "F") |>
+  mutate(size = factor(size,
+                       levels = c("Small", "Large"),
+                       labels = c("n = 5 each", "n = 100 each")))
+
+# Bracket positions for significance annotations
+brackets_round1 <- tibble(
+  size      = factor(c("n = 5 each", "n = 100 each"),
+                     levels = c("n = 5 each", "n = 100 each")),
+  y_pos     = c(160, 125),
+  label     = c("p = .948 (ns)", "p < .001 ***")
+)
+
+ggplot(plot_round1, aes(x = shoe, y = mean, fill = shoe)) +
+  geom_col(width = 0.6, alpha = 0.85) +
+  geom_errorbar(aes(ymin = ci_lo, ymax = ci_hi), width = 0.2, linewidth = 0.7) +
+  geom_signif(
+    data = data.frame(size = factor("n = 5 each",
+                                    levels = c("n = 5 each", "n = 100 each"))),
+    aes(xmin = "Men's", xmax = "Women's",
+        annotations = "p = .948 (ns)", y_position = 155),
+    inherit.aes = FALSE, manual = TRUE, tip_length = 0.02
+  ) +
+  geom_signif(
+    data = data.frame(size = factor("n = 100 each",
+                                    levels = c("n = 5 each", "n = 100 each"))),
+    aes(xmin = "Men's", xmax = "Women's",
+        annotations = "p < .001 ***", y_position = 110),
+    inherit.aes = FALSE, manual = TRUE, tip_length = 0.02
+  ) +
+  facet_wrap(~ size) +
+  scale_fill_manual(values = c("Men's" = "#2E86AB", "Women's" = "#C8467F")) +
+  scale_y_continuous(labels = scales::dollar_format(), limits = c(0, 175)) +
+  labs(
+    x = NULL, y = "Mean price",
+    title = "Same store, same cookie, same gender gap",
+    subtitle = "Five shoes can't see what 100 shoes can. Bars show 95% CIs."
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "none",
+        plot.title = element_text(face = "bold"))
+```
+
+The bars are similar heights in both panels. What changes is the width of the
+confidence intervals. Five shoes give you huge intervals that overlap massively.
+A hundred shoes give you tight intervals that clearly separate. The data didn't
+change. Our ability to see the data did.
+
+## Round 2: One-Sample *z*-Tests
+
+We have the population standard deviations, so a *z*-test is appropriate. We're
+going to ask three questions about the curated samples we got served.
+
+```{r z-helper}
+one_sample_z <- function(M, mu, sigma, n) {
+  se <- sigma / sqrt(n)
+  z  <- (M - mu) / se
+  p  <- 2 * (1 - pnorm(abs(z)))
+  tibble(z = z, p = p, se = se)
+}
+```
+
+### Test 3: Is the Curated Men's Sample Weird Compared to All Men's Shoes?
+
+```{r z1}
+z_men_vs_men <- one_sample_z(M = 103.80, mu = mu_men,
+                              sigma = sigma_men, n = 5)
+z_men_vs_men
+```
+
+`z = 2.75, p = .006.` So the five "men's shoes" the algorithm picked for the
+female-cookie shopper aren't a normal slice of the men's inventory. They're
+significantly more expensive than the average men's shoe.
+
+### Test 4: Does That Same Curated Sample Look Like Women's Shoes?
+
+```{r z2}
+z_men_vs_women <- one_sample_z(M = 103.80, mu = mu_women,
+                                sigma = sigma_women, n = 5)
+z_men_vs_women
+```
+
+`z = 1.12, p = .261.` The "men's" shoes shown to a female-cookie shopper are
+priced indistinguishably from the women's population. The algorithm isn't
+picking random men's shoes. It's picking men's shoes that cost what women's
+shoes cost.
+
+### Test 5: Sanity Check on the Large Women's Sample
+
+```{r z3}
+z_women_check <- one_sample_z(M = 95.93, mu = mu_women,
+                               sigma = sigma_women, n = 100)
+z_women_check
+```
+
+`z = 0.14, p = .886.` Sanity check passed. When we sample broadly, we recover
+the population. The bias lives in the small, curated picks.
+
+### Visualizing Where the Curated Sample Falls
+
+```{r z-plot, fig.height=5}
+x_grid <- seq(40, 150, length.out = 400)
+densities <- bind_rows(
+  tibble(price = x_grid,
+         density = dnorm(x_grid, mu_men, sigma_men),
+         population = "Men's population"),
+  tibble(price = x_grid,
+         density = dnorm(x_grid, mu_women, sigma_women),
+         population = "Women's population")
+)
+
+# Distribution of the SAMPLE MEAN under each null hypothesis
+sample_mean_curves <- bind_rows(
+  tibble(price = x_grid,
+         density = dnorm(x_grid, mu_men, sigma_men/sqrt(5)),
+         hypothesis = "If men's pop"),
+  tibble(price = x_grid,
+         density = dnorm(x_grid, mu_women, sigma_women/sqrt(5)),
+         hypothesis = "If women's pop")
+)
+
+ggplot(sample_mean_curves, aes(x = price, y = density, color = hypothesis)) +
+  geom_line(linewidth = 1.1) +
+  geom_vline(xintercept = 103.80, linetype = "dashed",
+             color = "#222222", linewidth = 0.7) +
+  annotate("label", x = 103.80, y = 0.058,
+           label = "Curated men's\nsample mean = $103.80",
+           hjust = 0.5, size = 3.3, fill = "white") +
+  annotate("text", x = 78, y = 0.045,
+           label = "z = 2.75\np = .006",
+           color = "#2E86AB", size = 3.3, fontface = "bold") +
+  annotate("text", x = 118, y = 0.025,
+           label = "z = 1.12\np = .261",
+           color = "#C8467F", size = 3.3, fontface = "bold") +
+  scale_color_manual(values = c("If men's pop" = "#2E86AB",
+                                "If women's pop" = "#C8467F"),
+                     name = "Sampling distribution") +
+  scale_x_continuous(labels = scales::dollar_format()) +
+  labs(
+    x = "Sample mean ($, n = 5)", y = "Density",
+    title = "The curated sample sits far from men's, comfortable with women's",
+    subtitle = "Sampling distributions of the mean for n = 5"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom",
+        plot.title = element_text(face = "bold"))
+```
+
+The dashed line marks the curated sample mean of \$103.80. Look how far it sits
+in the right tail of the men's sampling distribution, and how comfortably it
+sits inside the women's sampling distribution. Visually, the *z*-tests are just
+reading off where that line falls.
+
+## Round 3: The Plot Twist (Cookie = M)
+
+We cleared cookies, browsed a few hardware sites, and came back. Now the algorithm
+thinks we're male. We refreshed the same shoes.
+
+```{r cookie-comparison}
+shoe_data |>
+  select(shoe, cookie, size, mean) |>
+  pivot_wider(names_from = cookie, values_from = mean,
+              names_prefix = "Cookie = ") |>
+  mutate(`Difference (F - M)` = `Cookie = F` - `Cookie = M`)
+```
+
+Female-cookie prices are higher across the board, and the gap is huge for the
+small curated samples. The right test for this is paired, since each cookie=F
+price has a matched cookie=M price for the same physical shoe.
+
+## Round 4: Paired *t*-Test
+
+For the paired test, we use the differences directly. Across the 100 men's
+shoes, the average price drop after switching to a male cookie was \$3.41,
+with a standard deviation of differences of \$9.20. For the women's shoes, the
+average drop was \$0.41 with SD of differences \$4.51.
+
+```{r paired-t}
+paired_t <- function(mean_diff, sd_diff, n) {
+  se <- sd_diff / sqrt(n)
+  t_stat <- mean_diff / se
+  df <- n - 1
+  p <- 2 * (1 - pt(abs(t_stat), df))
+  tibble(mean_diff = mean_diff, sd_diff = sd_diff, n = n,
+         t = t_stat, df = df, p = p)
+}
+
+paired_results <- bind_rows(
+  paired_t(mean_diff = 3.41, sd_diff = 9.20, n = 100) |>
+    mutate(comparison = "Men's shoes (F vs M cookie)"),
+  paired_t(mean_diff = 0.41, sd_diff = 4.51, n = 100) |>
+    mutate(comparison = "Women's shoes (F vs M cookie)")
+) |>
+  select(comparison, everything())
+
+paired_results
+```
+
+For the men's shoes, *t*(99) = 3.71, *p* < .001. For the women's shoes,
+*t*(99) = 0.91, *p* = .365. The cookie effect is real for men's shoes and
+absent for women's shoes. The store appears to be charging female-coded
+shoppers more specifically when they shop in the men's section.
+
+```{r paired-plot, fig.height=4.5}
+paired_plot_data <- shoe_data |>
+  filter(size == "Large") |>
+  select(shoe, cookie, mean, ci_lo, ci_hi)
+
+ggplot(paired_plot_data, aes(x = cookie, y = mean, group = shoe, color = shoe)) +
+  geom_line(linewidth = 1.2) +
+  geom_errorbar(aes(ymin = ci_lo, ymax = ci_hi), width = 0.08, linewidth = 0.7) +
+  geom_point(size = 4) +
+  geom_text(aes(label = scales::dollar(mean, accuracy = 0.01)),
+            nudge_y = 2, size = 3.5, show.legend = FALSE) +
+  annotate("text", x = 1.5, y = 90,
+           label = "Men's: t(99) = 3.71, p < .001 ***",
+           size = 3.5, color = "#2E86AB", fontface = "bold") +
+  annotate("text", x = 1.5, y = 99,
+           label = "Women's: t(99) = 0.91, p = .365 (ns)",
+           size = 3.5, color = "#C8467F", fontface = "bold") +
+  scale_color_manual(values = c("Men's" = "#2E86AB", "Women's" = "#C8467F")) +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  labs(
+    x = "Tracking cookie", y = "Mean price",
+    title = "The cookie effect is selective",
+    subtitle = "Men's prices drop when the cookie says male. Women's prices barely move."
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom",
+        plot.title = element_text(face = "bold"))
+```
+
+The men's line has a visible slope. The women's line is nearly flat. The
+tracking cookie is changing prices in a targeted way.
+
+## Round 5: One-Way ANOVA
+
+We have four groups: each combination of shoe gender and cookie status. A
+one-way ANOVA treats them as four conditions and asks whether at least one mean
+differs from the others.
+
+```{r anova}
+anova_groups <- shoe_data |>
+  filter(size == "Large") |>
+  mutate(group = paste0(shoe, ", Cookie=", cookie)) |>
+  select(group, mean, sd, n)
+
+anova_groups
+
+# Compute one-way ANOVA from group summary statistics
+k          <- nrow(anova_groups)
+N          <- sum(anova_groups$n)
+grand_mean <- with(anova_groups, sum(mean * n) / N)
+
+SS_between <- with(anova_groups, sum(n * (mean - grand_mean)^2))
+SS_within  <- with(anova_groups, sum((n - 1) * sd^2))
+
+df_between <- k - 1
+df_within  <- N - k
+MS_between <- SS_between / df_between
+MS_within  <- SS_within  / df_within
+F_stat     <- MS_between / MS_within
+p_value    <- 1 - pf(F_stat, df_between, df_within)
+
+anova_table <- tribble(
+  ~Source,           ~SS,                       ~df,        ~MS,                       ~F,                  ~p,
+  "Between groups",  round(SS_between, 2),      df_between, round(MS_between, 2),      round(F_stat, 2),    formatC(p_value, format = "e", digits = 2),
+  "Within groups",   round(SS_within, 2),       df_within,  round(MS_within, 2),       NA_real_,            "",
+  "Total",           round(SS_between + SS_within, 2), df_between + df_within, NA_real_, NA_real_, ""
+)
+anova_table
+```
+
+`F(3, 396) = 13.08, p < .001.` At least one of the four conditions has a
+different mean than the others. The ANOVA on its own won't tell us which pairs
+differ. We can see the pattern in the means though.
+
+```{r anova-plot, fig.height=5.5}
+anova_plot_data <- shoe_data |>
+  filter(size == "Large") |>
+  mutate(group = paste0(shoe, ",\nCookie=", cookie),
+         group = factor(group, levels = c("Men's,\nCookie=F",
+                                          "Men's,\nCookie=M",
+                                          "Women's,\nCookie=F",
+                                          "Women's,\nCookie=M")))
+
+ggplot(anova_plot_data, aes(x = group, y = mean, fill = shoe)) +
+  geom_col(width = 0.65, alpha = 0.85) +
+  geom_errorbar(aes(ymin = ci_lo, ymax = ci_hi),
+                width = 0.18, linewidth = 0.7) +
+  geom_text(aes(label = scales::dollar(mean, accuracy = 0.01)),
+            vjust = -0.6, size = 3.4, fontface = "bold") +
+  geom_signif(
+    annotations = "Men's: F vs M cookie, p < .001 ***",
+    xmin = "Men's,\nCookie=F", xmax = "Men's,\nCookie=M",
+    y_position = 110, tip_length = 0.02, textsize = 3.2
+  ) +
+  geom_signif(
+    annotations = "Women's: F vs M cookie, p = .365 (ns)",
+    xmin = "Women's,\nCookie=F", xmax = "Women's,\nCookie=M",
+    y_position = 118, tip_length = 0.02, textsize = 3.2
+  ) +
+  annotate("label", x = 2.5, y = 130,
+           label = "Overall ANOVA: F(3, 396) = 13.08, p < .001",
+           fill = "#FFF3B0", size = 3.6, fontface = "bold") +
+  scale_fill_manual(values = c("Men's" = "#2E86AB", "Women's" = "#C8467F")) +
+  scale_y_continuous(labels = scales::dollar_format(),
+                     limits = c(0, 140)) +
+  labs(
+    x = NULL, y = "Mean price",
+    title = "Four groups, one ANOVA, a clear pattern",
+    subtitle = "95% CIs shown. Brackets are paired comparisons from Round 4."
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "none",
+        plot.title = element_text(face = "bold"),
+        axis.text.x = element_text(size = 9))
+```
+
+Two stories show up in the bars. Women's shoes are taller than men's shoes
+regardless of cookie. Within men's shoes, the female-cookie bar is taller than
+the male-cookie bar. Within women's shoes, the cookie barely matters. That's
+the pattern the ANOVA detected.
+
+## So, Is the Store Gouging?
+
+Pulling everything together:
+
+- The **large-sample independent *t*-test** showed women's shoes really do cost
+  more than men's shoes, by about \$8.
+- The ***z*-tests** showed the curated small sample of men's shoes shown to a
+  female-cookie shopper was priced up in women's-shoe territory. The algorithm
+  was cherry-picking expensive men's shoes for that audience.
+- The **paired *t*-test** showed that on the same men's shoes, female-cookie
+  shoppers pay about \$3.41 more than male-cookie shoppers. For women's shoes,
+  the cookie does nothing.
+- The **one-way ANOVA** confirmed the four shoe-by-cookie conditions aren't
+  drawn from the same distribution.
+
+The hypothesis isn't proven beyond doubt. A real audit would need a controlled
+experiment with many more shoes, randomized browsing, and a few different IP
+addresses. The evidence we have is consistent and points one direction though.
+The cookie matters, and sample size matters even more. With five shoes, none of
+this would have been visible.
+
+::: {.callout-tip}
+## The Big Lesson
+A small biased sample can perfectly hide a large biased system. Always ask how
+much data a conclusion came from.
+:::
+
+::: {.callout-note}
+## For the Review Session
+Bring questions about confidence intervals. Every plot in this document shows
+them, and we'll spend time talking about what a 95% CI does and does not say.
+:::
