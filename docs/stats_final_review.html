@@ -164,11 +164,12 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>When you first load this, your broswer starts multiple R instances. I imagine there’s a way to optimize that, but for now, wait a minute or two while the interactive parts load. If it doesn’t load for you after waiting a few minutes, please shoot me an email so I can look into it.</p>
+<p>When you first load this, your browser starts multiple R instances. I imagine there’s a way to optimize that, but for now, wait a minute or two while the interactive parts load. If it doesn’t load for you after waiting a few minutes, please shoot me an email so I can look into it.</p>
 </div>
 </div>
 <p>This notebook extends the midterm review with every test you are responsible for on the final. The CLT, z-test, one- and two-sample <em>t</em>-test, and one-way ANOVA sections are carried over from the midterm tool. The new material is confidence intervals and effect sizes (Section 5), post-hoc tests (Section 7), two-way ANOVA (Section 8), correlation (Section 9), linear regression (Section 10), and chi-square (Section 11).</p>
 <p>Playing with data is one of the best ways to build intuition for <strong>what is going on inside</strong> each test. When I first learned these, the formulas felt arbitrary until I could watch one slider move the whole picture. That is what this tool is for.</p>
+<p>DISCLAIMER: I haven’t seen the final, but this is built from seeing the practice final.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="If I were studying for the final...">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -192,7 +193,7 @@ window.Quarto = {
 <section id="choosing-the-right-test" class="level1">
 <h1>0. Choosing the right test</h1>
 <p>More points on this final come from picking the correct test than from any single calculation. The questions usually end with “be as specific as possible,” so a vague answer like “a t-test” or “ANOVA” will lose points. Name the full test, including between- vs within-subjects and one- vs two-way.</p>
-<p>Work down from your outcome variable.</p>
+<p>Work down from your outcome variable. You’ll probably have to zoom in- I’ve taken a bit to try and reformat it but it’s not worth the headache for something that’s rendering live.</p>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
 <div>
@@ -2226,8 +2227,10 @@ server &lt;- function(input, output) {
 }
 
 shinyApp(ui = ui, server = server)</code></pre>
+<p>And that’s everything you need for the final! You’ve covered a lot of material in the past few months, and I’ve been very impressed at how the visualizations and interpretations of data have improved overall for each homework.</p>
+<p>You got this!</p>
 <hr>
-<p>NOTE: Please email me (benjamin.e.graul.gr@dartmouth.edu) if you find any errors in this tool!</p>
+<p>NOTE: Please email me (benjamin.e.graul.gr@dartmouth.edu) if you find any errors in this tool! Visualizations created and text formatted with the assistance of Claude Code Opus 4.6-4.8.</p>
 </section>
 
 </main>
